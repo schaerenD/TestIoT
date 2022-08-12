@@ -96,18 +96,21 @@ void init_mqqt(const String URL, const String Port)
   send_at_command("AT+CNACT=0,1\r\n", "OK", 1000);     //  AT+CNACT=<pdpidx>,<action>  <pdpidx>=0: Context 0-3, <action>=0: Deactive, 1:Active, 2: Auto Active
   send_at_command("AT+CNACT?\r\n", "OK", 1000);
   String Conf = "AT+SMCONF=\"URL\",\"" + URL + "\",\"" + Port + "\"\r\n";
-  send_at_command("AT+SMCONF=\"URL\",\"test.mosquitto.org\",\"1883\"\r\n", "OK", 1000);
+  //send_at_command("AT+SMCONF=\"URL\",\"test.mosquitto.org\",\"1883\"\r\n", "OK", 1000);
+  send_at_command(Conf, "OK", 1000);
   send_at_command("AT+SMCONF=\"KEEPTIME\",60\r\n", "OK", 1000);
   send_at_command("AT+SMCONF=\"CLEANSS\",1\r\n", "OK", 1000);
   send_at_command("AT+SMCONF=\"CLIENTID\",\"simmqtt\"\r\n", "OK", 1000);
   send_at_command("AT+SMCONN\r\n", "OK", 5000);
 }
 
-void ping()
+void ping(const String URL)
 {
   log("--------------------\r\n");
   send_at_command("AT+SNPDPID=0\r\n", "OK", 1000);    // Take PDP Context 0 for Ping's
-  send_at_command("AT+SNPING4=\"www.google.com\",3,16,1000\r\n", "OK", 8000);      // IPV4 Ping Sending
+  String Conf = "AT+SNPING4=\"" + URL + "\",3,16,1000\r\n";
+  send_at_command(Conf, "OK", 8000);      // IPV4 Ping Sending
+  //send_at_command("AT+SNPING4=\"www.google.com\",3,16,1000\r\n", "OK", 8000);      // IPV4 Ping Sending
 }
 
 void post_mqqt()
@@ -190,11 +193,12 @@ void loop()
 
   init_modem();
   init_mqqt("test.mosquitto.org","1883");
+  init_mqqt("test.mosquitto.org","1883");
 
   while(1)
   {
     //general_information();
-    ping();
+    ping("www.google.com");
     post_mqqt();
   }
 }
