@@ -67,7 +67,7 @@ void init_modem()
   send_at_command("AT+CREBOOT\r\n", "OK", 1000);// Reboot the Modul
   send_at_command("AT\r\n", "OK", 1000);//  Same as above. Synchonize UART Interface after Reboot
   send_at_command("AT\r\n", "OK", 1000);//  Same as above. Synchonize UART Interface after Reboot
-  send_at_command("AT+CMEE=1\r\n", "OK", 1000);// Enable verbos Error Code 
+  send_at_command("AT+CMEE=2\r\n", "OK", 1000);// Enable verbos Error Code 
   send_at_command("AT+CGATT=0\r\n", "OK", 3000);// Deatach from Network
   send_at_command("AT+CPIN?\r\n", "OK", 3000);// Check if SIM PIN is required
   send_at_command("AT+CGDCONT=1,\"IP\",\"gprs.swisscom.ch\"\r\n", "OK", 1000);// Set PDP Context with APN, IP and DHCP
@@ -90,16 +90,29 @@ void general_information()
   send_at_command("AT+CGPADDR\r\n", "OK", 1000);
 }
 
-void init_mqqt()
+void init_mqqt(const String URL)
 {
   log("--------------------\r\n");
+
+  
+  String tetete;
+  tetete = "sadfhjkaf " + URL + " sdfaljh";
+  log(tetete);
+
   send_at_command("AT+CNACT=0,1\r\n", "OK", 1000);     //  AT+CNACT=<pdpidx>,<action>  <pdpidx>=0: Context 0-3, <action>=0: Deactive, 1:Active, 2: Auto Active
   send_at_command("AT+CNACT?\r\n", "OK", 1000);
-  send_at_command("AT+SMCONF=\"URL\",\"broker.emqx.io\",\"1883\"\r\n", "OK", 1000);
+  send_at_command("AT+SMCONF=\"URL\",\"test.mosquitto.org\",\"1883\"\r\n", "OK", 1000);
   send_at_command("AT+SMCONF=\"KEEPTIME\",60\r\n", "OK", 1000);
   send_at_command("AT+SMCONF=\"CLEANSS\",1\r\n", "OK", 1000);
   send_at_command("AT+SMCONF=\"CLIENTID\",\"simmqtt\"\r\n", "OK", 1000);
   send_at_command("AT+SMCONN\r\n", "OK", 5000);
+}
+
+void ping()
+{
+  log("--------------------\r\n");
+  send_at_command("AT+SNPDPID=0\r\n", "OK", 1000);    // Take PDP Context 0 for Ping's
+  send_at_command("AT+SNPING4=\"www.google.com\",3,16,1000\r\n", "OK", 8000);      // IPV4 Ping Sending
 }
 
     //device.sendMsg("AT+CNACT=0,1\r\n");   //  AT+CNACT=<pdpidx>,<action>  <pdpidx>=0: Context 0-3, <action>=0: Deactive, 1:Active, 2: Auto Active
@@ -132,23 +145,16 @@ void init_mqqt()
 //
 void post_mqqt()
 {
-  device.sendMsg("AT+SMSUB=\"sub_topic\",1\r\n");   // AT+SMSUB=<topic>,<qos>   <topic>=Topic to Subscripe,    <qos>=0:only one, 1:min one, 2:Only once
-  readstr = device.waitMsg(1000);
-  log(readstr);
+  //device.sendMsg("AT+SMSUB=\"sub_topic\",0\r\n");   // AT+SMSUB=<topic>,<qos>   <topic>=Topic to Subscripe,    <qos>=0:only one, 1:min one, 2:Only once
+  //readstr = device.waitMsg(2000);
+  //log(readstr);
   
-  while(1)
-  {
-    M5.update();
-    if(M5.BtnA.wasPressed()) 
-    {
-      device.sendMsg("AT+SMPUB=\"v1/devices/me/telemetry\",5,1,1\r\n");
-      delay(100);
-      device.sendMsg("hello\r\n");
-    }
-    readstr = device.waitMsg(0);
-    Serial.print(readstr);
-    log(readstr);
-  }
+  //device.sendMsg("AT+SMPUB=\"v1/devices/me/telemetry\",5,1,1\r\n");
+  device.sendMsg("AT+SMPUB=\"sub_topic\",5,0,0\r\n");
+  delay(500);
+  device.sendMsg("hello");
+  readstr = device.waitMsg(8000);
+  log(readstr);
 }
 
 void setup() 
@@ -216,10 +222,13 @@ void loop()
   //loop
 
   init_modem();
-  init_mqqt();
+  init_mqqt("HELLO WORLD");
 
   while(1)
   {
-    general_information();
+    //general_information();
+    
+    ping();
+    post_mqqt();
   }
 }
