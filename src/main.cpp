@@ -90,17 +90,12 @@ void general_information()
   send_at_command("AT+CGPADDR\r\n", "OK", 1000);
 }
 
-void init_mqqt(const String URL)
+void init_mqqt(const String URL, const String Port)
 {
   log("--------------------\r\n");
-
-  
-  String tetete;
-  tetete = "sadfhjkaf " + URL + " sdfaljh";
-  log(tetete);
-
   send_at_command("AT+CNACT=0,1\r\n", "OK", 1000);     //  AT+CNACT=<pdpidx>,<action>  <pdpidx>=0: Context 0-3, <action>=0: Deactive, 1:Active, 2: Auto Active
   send_at_command("AT+CNACT?\r\n", "OK", 1000);
+  String Conf = "AT+SMCONF=\"URL\",\"" + URL + "\",\"" + Port + "\"\r\n";
   send_at_command("AT+SMCONF=\"URL\",\"test.mosquitto.org\",\"1883\"\r\n", "OK", 1000);
   send_at_command("AT+SMCONF=\"KEEPTIME\",60\r\n", "OK", 1000);
   send_at_command("AT+SMCONF=\"CLEANSS\",1\r\n", "OK", 1000);
@@ -115,34 +110,6 @@ void ping()
   send_at_command("AT+SNPING4=\"www.google.com\",3,16,1000\r\n", "OK", 8000);      // IPV4 Ping Sending
 }
 
-    //device.sendMsg("AT+CNACT=0,1\r\n");   //  AT+CNACT=<pdpidx>,<action>  <pdpidx>=0: Context 0-3, <action>=0: Deactive, 1:Active, 2: Auto Active
-    //readstr = device.waitMsg(200);
-    //log(readstr);
-//
-    //device.sendMsg("AT+CNACT?\r\n");    // Answer is <pdpidx>=Context,<statusx>=Active(1) or Deactive(0),<addressx>=IP-Adresse
-    //readstr = device.waitMsg(200);
-    //log(readstr);
-//
-    //device.sendMsg("AT+SMCONF=\"URL\",\"broker.emqx.io\",\"1883\"\r\n");     // Set Broker Adress
-    //readstr = device.waitMsg(1000);
-    //log(readstr);
-//
-    //device.sendMsg("AT+SMCONF=\"KEEPTIME\",60\r\n");   // Set Keeptime, Hold Connection for XX Seconds, max is 65535 Seconds
-    //readstr = device.waitMsg(1000);
-    //log(readstr);
-//
-    //device.sendMsg("AT+SMCONF=\"CLEANSS\",1\r\n");  // Set Cleaness: 0: Resume communication based on persent session, 1: Resume communication with a new session
-    //readstr = device.waitMsg(1000);
-    //log(readstr);
-//
-    //device.sendMsg("AT+SMCONF=\"CLIENTID\",\"simmqtt\"\r\n");  // Set Client ID
-    //readstr = device.waitMsg(1000);
-    //log(readstr);
-//
-    //device.sendMsg("AT+SMCONN\r\n");    // MQTT Connection, OK or ERROR
-    //readstr = device.waitMsg(5000);
-    //log(readstr);
-//
 void post_mqqt()
 {
   //device.sendMsg("AT+SMSUB=\"sub_topic\",0\r\n");   // AT+SMSUB=<topic>,<qos>   <topic>=Topic to Subscripe,    <qos>=0:only one, 1:min one, 2:Only once
@@ -222,12 +189,11 @@ void loop()
   //loop
 
   init_modem();
-  init_mqqt("HELLO WORLD");
+  init_mqqt("test.mosquitto.org","1883");
 
   while(1)
   {
     //general_information();
-    
     ping();
     post_mqqt();
   }
