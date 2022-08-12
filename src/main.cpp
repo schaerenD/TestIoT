@@ -113,14 +113,15 @@ void ping(const String URL)
   //send_at_command("AT+SNPING4=\"www.google.com\",3,16,1000\r\n", "OK", 8000);      // IPV4 Ping Sending
 }
 
-void post_mqqt()
+void post_mqqt(const String topic)
 {
   //device.sendMsg("AT+SMSUB=\"sub_topic\",0\r\n");   // AT+SMSUB=<topic>,<qos>   <topic>=Topic to Subscripe,    <qos>=0:only one, 1:min one, 2:Only once
   //readstr = device.waitMsg(2000);
   //log(readstr);
   
   //device.sendMsg("AT+SMPUB=\"v1/devices/me/telemetry\",5,1,1\r\n");
-  device.sendMsg("AT+SMPUB=\"sub_topic\",5,0,0\r\n");
+  String Conf = "AT+SMPUB=\"" + topic + "\",5,0,0\r\n";
+  device.sendMsg(Conf);
   delay(500);
   device.sendMsg("hello");
   readstr = device.waitMsg(8000);
@@ -192,13 +193,14 @@ void loop()
   //loop
 
   init_modem();
-  init_mqqt("test.mosquitto.org","1883");
+  //init_mqqt("test.mosquitto.org","1883");
   init_mqqt("test.mosquitto.org","1883");
 
   while(1)
   {
     //general_information();
     ping("www.google.com");
-    post_mqqt();
+    post_mqqt("sub_topic");
+    //post_mqqt("v1/devices/me/telemetry");
   }
 }
