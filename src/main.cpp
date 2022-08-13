@@ -98,10 +98,18 @@ void init_mqqt(const String URL, const String Port)
   String Conf = "AT+SMCONF=\"URL\",\"" + URL + "\",\"" + Port + "\"\r\n";
   //send_at_command("AT+SMCONF=\"URL\",\"test.mosquitto.org\",\"1883\"\r\n", "OK", 1000);
   send_at_command(Conf, "OK", 1000);
-  send_at_command("AT+SMCONF=\"KEEPTIME\",60\r\n", "OK", 1000);
+  send_at_command("AT+SMCONF=\"KEEPTIME\",30\r\n", "OK", 1000);
   send_at_command("AT+SMCONF=\"CLEANSS\",1\r\n", "OK", 1000);
-  send_at_command("AT+SMCONF=\"CLIENTID\",\"simmqtt\"\r\n", "OK", 1000);
+  send_at_command("AT+SMCONF=\"CLIENTID\",\"1fcba86c-e310-4cb3-862d-8a6ed676f5c6\"\r\n", "OK", 1000);
+  send_at_command("AT+SMCONF=\"USERNAME\",\"h3LGa97iU0kz5ufuKlCQ\"\r\n", "OK", 1000);
+  send_at_command("AT+SMCONF=\"PASSWORD\",\"1234\"\r\n", "OK", 1000);
+  send_at_command("AT+SMCONF=\"QOS\",\"0\"\r\n", "OK", 1000);
+  //send_at_command("AT+SMCONF=\"TOPIC\",\"v1/devices/me/telemetry\"\r\n", "OK", 1000);
+  //send_at_command("AT+SMCONF=\"ASYNCMODE\",\"1\"\r\n", "OK", 1000);
+  //send_at_command("AT+SMCONF=\"SUBHEX\",\"1\"\r\n", "OK", 1000);
+  send_at_command("AT+SMCONF?\r\n", "OK", 1000);
   send_at_command("AT+SMCONN\r\n", "OK", 5000);
+  send_at_command("AT+SMSTATE?\r\n", "OK", 1000);
 }
 
 void ping(const String URL)
@@ -119,12 +127,15 @@ void post_mqqt(const String topic)
   //readstr = device.waitMsg(2000);
   //log(readstr);
   
+  send_at_command("AT+SMSTATE?\r\n", "OK", 1000);
+  
   //device.sendMsg("AT+SMPUB=\"v1/devices/me/telemetry\",5,1,1\r\n");
-  String Conf = "AT+SMPUB=\"" + topic + "\",5,0,0\r\n";
+  String Conf = "AT+SMPUB=\"" + topic + "\",19,0,0\r\n";
   device.sendMsg(Conf);
   delay(500);
-  device.sendMsg("hello");
-  readstr = device.waitMsg(8000);
+  device.sendMsg("{\"temperature\": 25}");
+  readstr = device.waitMsg(20000);
+
   log(readstr);
 }
 
@@ -193,14 +204,14 @@ void loop()
   //loop
 
   init_modem();
+  init_mqqt("thingsboard.cloud","1883");
   //init_mqqt("test.mosquitto.org","1883");
-  init_mqqt("test.mosquitto.org","1883");
 
   while(1)
   {
     //general_information();
     ping("www.google.com");
-    post_mqqt("sub_topic");
-    //post_mqqt("v1/devices/me/telemetry");
+    post_mqqt("v1/devices/me/telemetry");
+    //post_mqqt("");
   }
 }
