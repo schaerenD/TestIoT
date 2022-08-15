@@ -138,6 +138,45 @@ void post_mqqt(const String topic)
   log(readstr);
 }
 
+void post_mqtt_temp(const String topic)
+{
+  String JSON_Header = "{\"temperature\": ";
+  String JSON_Second_Part = ",\r\n \"humidity\":12";
+  String JSON_Third_Part = ",\r\n \"pressure\":";
+  String JSON_End = "}";
+  String JSON1;
+  String JSON2;
+
+  pressure = qmp6988.calcPressure();
+  if (sht30.get() == 0)   // Obtain the data of shT30.
+  {
+    tmp = sht30.cTemp;    // Store the temperature obtained from shT30.
+    hum = sht30.humidity; // Store the humidity obtained from the SHT30.
+  }
+  else 
+  {
+    tmp = 0;
+    hum = 0;
+  }
+
+  // String JOSN
+  JSON1 = JSON_Header + tmp + JSON_Second_Part + hum + JSON_Third_Part + pressure + JSON_End;
+  int JSON_length = JSON1.length();
+
+  String JSON_length_String = "";
+  JSON_length_String.concat(JSON_length);
+
+  send_at_command("AT+SMSTATE?\r\n", "OK", 1000);
+  
+  //device.sendMsg("AT+SMPUB=\"v1/devices/me/telemetry\",5,1,1\r\n");
+  String Conf = "AT+SMPUB=\"" + topic + "\"," + JSON_length_String + ",0,0\r\n";
+  device.sendMsg(Conf);
+  delay(500);
+  device.sendMsg(JSON1);
+  readstr = device.waitMsg(5000);
+  log(readstr);
+}
+
 void setup() 
 {
   // put your setup code here, to run once:
@@ -162,34 +201,10 @@ void loop()
 {
 
   // put your main code here, to run repeatedly:
-  pressure = qmp6988.calcPressure();
-  if (sht30.get() == 0)   // Obtain the data of shT30.
-  {
-    tmp = sht30.cTemp;    // Store the temperature obtained from shT30.
-    hum = sht30.humidity; // Store the humidity obtained from the SHT30.
-  }
-  else 
-  {
-    tmp = 0;
-    hum = 0;
-  }
-
-  String myString;
-  String myString1;
-  //myString.concat(hum);
-  myString =  "Hello World " + 123;
-
-  while(1)
-  {
-    sht30.get();
-    tmp = sht30.cTemp;
-    myString1 =  "Hello World ";
-    myString =  myString1 + tmp;
-    log(myString); log("\n\r");
-  }
+  
+  
 
   //loop
-
   init_modem();
   init_mqqt("thingsboard.cloud","1883");
   //init_mqqt("test.mosquitto.org","1883");
@@ -198,7 +213,14 @@ void loop()
   {
     //general_information();
     ping("www.google.com");
-    post_mqqt("v1/devices/me/telemetry");
+    //post_mqqt("v1/devices/me/telemetry");
+    post_mqtt_temp("v1/devices/me/telemetry");
+    post_mqtt_temp("v1/devices/me/telemetry");
+    post_mqtt_temp("v1/devices/me/telemetry");
+    post_mqtt_temp("v1/devices/me/telemetry");
+    post_mqtt_temp("v1/devices/me/telemetry");
+    post_mqtt_temp("v1/devices/me/telemetry");
+    post_mqtt_temp("v1/devices/me/telemetry");
     //post_mqqt("");
   }
 }
