@@ -201,6 +201,19 @@ void loop()
     hum = 0;
   }
 
+  String myString;
+  String myString1;
+  //myString.concat(hum);
+  myString =  "Hello World " + 123;
+
+  while(1)
+  {
+    float Var = tmp;
+    myString1 =  "Hello World ";
+    myString =  myString1 + Var;
+    log(myString); log("\n\r");
+  }
+
   //loop
 
   init_modem();
