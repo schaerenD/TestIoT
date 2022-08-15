@@ -118,7 +118,6 @@ void ping(const String URL)
   send_at_command("AT+SNPDPID=0\r\n", "OK", 1000);    // Take PDP Context 0 for Ping's
   String Conf = "AT+SNPING4=\"" + URL + "\",3,16,1000\r\n";
   send_at_command(Conf, "OK", 8000);      // IPV4 Ping Sending
-  //send_at_command("AT+SNPING4=\"www.google.com\",3,16,1000\r\n", "OK", 8000);      // IPV4 Ping Sending
 }
 
 void post_mqqt(const String topic)
@@ -153,36 +152,10 @@ void setup()
 
   device.Init(&Serial2, 16, 17);
 
-  //device.sendMsg("AT+CREBOOT\r\n");
-  //delay(1000);
-  //while(1)
-  //{
-  //      device.sendMsg("AT+CSQ\r\n");
-  //      readstr = device.waitMsg(1000);
-  //      log(readstr);
-  //      if(readstr.indexOf("+CSQ: 99,99") ==-1)
-  //      {
-  //          break;
-  //      }
-  //}
-
   M5.Power.begin(); //Init Power module. Initialize the power module
- 
-  //M5.Lcd.print(M5.Lcd.height());    //Display the heigh on the screen
-  //M5.Lcd.print(M5.Lcd.width());     //Display the width on the screen
- 
-                    /* Power chip connected to gpio21, gpio22, I2C device
-                      Set battery charging voltage and current
-                      If used battery, please call this function in your project */
-  //M5.Lcd.setTextDatum(MC_DATUM);    //Set text alignment to center
-  //M5.Lcd.drawString("hello", 160, 120, 2);    //Print the string in font 2 at (160, 120) hello
-  //M5.Lcd.drawString("Gross", 170, 100, 4);    //Display the string Hello M5 in font 2 at (160, 100)
 
   Wire.begin();
   qmp6988.init();
-  
-  //M5.Lcd.fillScreen(RED);
-  //M5.Lcd.print("Hello World"); // Print text on the screen (string) Print text on the screen (string)
 }
 
 void loop() 
@@ -208,9 +181,10 @@ void loop()
 
   while(1)
   {
-    float Var = tmp;
+    sht30.get();
+    tmp = sht30.cTemp;
     myString1 =  "Hello World ";
-    myString =  myString1 + Var;
+    myString =  myString1 + tmp;
     log(myString); log("\n\r");
   }
 
