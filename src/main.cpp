@@ -141,8 +141,8 @@ void post_mqqt(const String topic)
 void post_mqtt_temp(const String topic)
 {
   String JSON_Header = "{\"temperature\": ";
-  String JSON_Second_Part = ",\r\n \"humidity\":12";
-  String JSON_Third_Part = ",\r\n \"pressure\":";
+  String JSON_Second_Part = ",\r\n \"humidity\": ";
+  String JSON_Third_Part = ",\r\n \"pressure\": ";
   String JSON_End = "}";
   String JSON1;
   String JSON2;
@@ -179,30 +179,29 @@ void post_mqtt_temp(const String topic)
 
 void read_csq_readcommdan()
 {
-  String teststring_tudli = "AT+CSQ\r\n+CSQ: 5,20\n\r\n\rOK";
+  String response_string = "AT+CSQ\r\n+CSQ: 5,20\n\r\n\rOK";
 }
 
 void read_cedrxrdp_readcommand()
 {
-  String teststring_tudli = "AT+CEDRXRDP\r\n+CEDRXRDP: 5,\"0000\",\"0010\",\"0100\"\n\r\n\rOK";
+  String response_string = readstr;//"AT+CEDRXRDP\r\n+CEDRXRDP: 5,\"0000\",\"0010\",\"0100\"\n\r\n\rOK";
 
   String answerHeader = "+CEDRXRDP= ";
   int answerHeaderLength = answerHeader.length();
 
-
-  int startOfAnswer = teststring_tudli.indexOf("+CEDRXRDP: ");
+  int startOfAnswer = response_string.indexOf(answerHeader);
   if (startOfAnswer != -1)
   {
     // First Parameter
-    int firstComma = teststring_tudli.indexOf(',');
-    int secondComma =  teststring_tudli.indexOf(',', firstComma + 1 );
-    int thirdComma =  teststring_tudli.indexOf(',', secondComma + 1 );
-    int endOfAnswer = teststring_tudli.length();
+    int firstComma = response_string.indexOf(',');
+    int secondComma =  response_string.indexOf(',', firstComma + 1 );
+    int thirdComma =  response_string.indexOf(',', secondComma + 1 );
+    int endOfAnswer = response_string.length();
 
-    String firstParameter = teststring_tudli.substring(startOfAnswer+10, firstComma);
-    String secondParameter = teststring_tudli.substring(firstComma+1, secondComma);
-    String thirdParameter = teststring_tudli.substring(secondComma+1, thirdComma);
-    String fourthParameter = teststring_tudli.substring(thirdComma+1, endOfAnswer);
+    String firstParameter = response_string.substring(startOfAnswer+10, firstComma);
+    String secondParameter = response_string.substring(firstComma+1, secondComma);
+    String thirdParameter = response_string.substring(secondComma+1, thirdComma);
+    String fourthParameter = response_string.substring(thirdComma+1, endOfAnswer);
 
     log("\n\r First Parameter:");
     log(firstParameter);
@@ -217,29 +216,28 @@ void read_cedrxrdp_readcommand()
 
 void read_cpsmrdp_readcommand()
 {
-  String teststring_tudli = "AT+CPSMRDP\r\n+CPSMRDP: 0,20,14400,0,0,4320\n\r\n\rOK";
+  String response_string = readstr;   //"AT+CPSMRDP\r\n+CPSMRDP: 0,20,14400,0,0,4320\n\r\n\rOK";
 
-  String answerHeader = "+CPSMRDP= ";
+  String answerHeader = "+CPSMRDP: ";
   int answerHeaderLength = answerHeader.length();
 
-
-  int startOfAnswer = teststring_tudli.indexOf("+CPSMRDP: ");
+  int startOfAnswer = response_string.indexOf(answerHeader);
   if (startOfAnswer != -1)
   {
     // First Parameter
-    int firstComma = teststring_tudli.indexOf(',');
-    int secondComma =  teststring_tudli.indexOf(',', firstComma + 1 );
-    int thirdComma =  teststring_tudli.indexOf(',', secondComma + 1 );
-    int fourthComma =  teststring_tudli.indexOf(',', thirdComma + 1 );
-    int fifthComma =  teststring_tudli.indexOf(',', fourthComma + 1 );
-    int endOfAnswer = teststring_tudli.length();
+    int firstComma = response_string.indexOf(',');
+    int secondComma =  response_string.indexOf(',', firstComma + 1 );
+    int thirdComma =  response_string.indexOf(',', secondComma + 1 );
+    int fourthComma =  response_string.indexOf(',', thirdComma + 1 );
+    int fifthComma =  response_string.indexOf(',', fourthComma + 1 );
+    int endOfAnswer = response_string.length();
 
-    String firstParameter = teststring_tudli.substring(startOfAnswer+10, firstComma);
-    String secondParameter = teststring_tudli.substring(firstComma+1, secondComma);
-    String thirdParameter = teststring_tudli.substring(secondComma+1, thirdComma);
-    String fourthParameter = teststring_tudli.substring(thirdComma+1, fourthComma);
-    String fifthParameter = teststring_tudli.substring(fourthComma+1, fifthComma);
-    String sixthParameter = teststring_tudli.substring(fifthComma+1, endOfAnswer);
+    String firstParameter = response_string.substring(startOfAnswer+10, firstComma);
+    String secondParameter = response_string.substring(firstComma+1, secondComma);
+    String thirdParameter = response_string.substring(secondComma+1, thirdComma);
+    String fourthParameter = response_string.substring(thirdComma+1, fourthComma);
+    String fifthParameter = response_string.substring(fourthComma+1, fifthComma);
+    String sixthParameter = response_string.substring(fifthComma+1, endOfAnswer);
 
     log("\n\r First Parameter:");
     log(firstParameter);
@@ -259,37 +257,26 @@ void read_cpsmrdp_readcommand()
 void read_cpsms_readcommand()
 {
 
-  String teststring_tudli = "AT+CPSMS?\r\n+CPSMS: 0,,,\"01100000\",\"00000000\"\n\r\n\rOK";
-
-  //log("PRESET:\r\n");
-  //log(teststring_tudli);
-  //delay(5000);
-
-  teststring_tudli = readstr;
-
-  //log("DTRY:\r\n");
-  //log(teststring_tudli);
-  //delay(5000);
+  String response_string = readstr; //"AT+CPSMS?\r\n+CPSMS: 0,,,\"01100000\",\"00000000\"\n\r\n\rOK";
 
   String answerHeader = "+CPSMS: ";
   int answerHeaderLength = answerHeader.length();
 
-
-  int startOfAnswer = teststring_tudli.indexOf("+CPSMS: ");
+  int startOfAnswer = response_string.indexOf(answerHeader);
   if (startOfAnswer != -1)
   {
     // First Parameter
-    int firstComma = teststring_tudli.indexOf(',');
-    int secondComma =  teststring_tudli.indexOf(',', firstComma + 1 );
-    int thirdComma =  teststring_tudli.indexOf(',', secondComma + 1 );
-    int fourthComma =  teststring_tudli.indexOf(',', thirdComma + 1 );
-    int endOfAnswer = teststring_tudli.length();
+    int firstComma = response_string.indexOf(',');
+    int secondComma =  response_string.indexOf(',', firstComma + 1 );
+    int thirdComma =  response_string.indexOf(',', secondComma + 1 );
+    int fourthComma =  response_string.indexOf(',', thirdComma + 1 );
+    int endOfAnswer = response_string.length();
 
-    String firstParameter = teststring_tudli.substring(startOfAnswer+8, firstComma);
-    String secondParameter = teststring_tudli.substring(firstComma+1, secondComma);
-    String thirdParameter = teststring_tudli.substring(secondComma+1, thirdComma);
-    String fourthParameter = teststring_tudli.substring(thirdComma+1, fourthComma);
-    String fifthParameter = teststring_tudli.substring(fourthComma+1, endOfAnswer);
+    String firstParameter = response_string.substring(startOfAnswer+8, firstComma);
+    String secondParameter = response_string.substring(firstComma+1, secondComma);
+    String thirdParameter = response_string.substring(secondComma+1, thirdComma);
+    String fourthParameter = response_string.substring(thirdComma+1, fourthComma);
+    String fifthParameter = response_string.substring(fourthComma+1, endOfAnswer);
 
     log("\n\r First Parameter:");
     log(firstParameter);
@@ -308,7 +295,11 @@ void power_save_settings()
 {
   send_at_command("AT+CPSMS?\r\n", "OK", 1000); // Read PSM Values
   read_cpsms_readcommand();
-  send_at_command("AT+CPSMRDP\r\n", "OK", 1000); // eDRX Values
+  send_at_command("AT+CPSMRDP\r\n", "OK", 1000); // eDRX Values Read
+  read_cpsms_readcommand();
+  send_at_command("AT+CEDRXRDP\r\n", "OK", 1000); // eDRX Values
+  read_cedrxrdp_readcommand();
+  delay(5000);
 }
 
 void setup() 
@@ -336,7 +327,6 @@ void loop()
 
   // put your main code here, to run repeatedly:
   read_cpsmrdp_readcommand();
-  delay(100000);
   //loop
   init_modem();
   init_mqqt("thingsboard.cloud","1883");
@@ -352,7 +342,6 @@ void loop()
     ////send_at_command("AT+IPR=115200\r\n", "OK", 1000);
     ////send_at_command("AT+CEREG=4\r\n", "OK", 1000);
     ////send_at_command("AT+CEREG?\r\n", "OK", 1000);
-
 
     power_save_settings();
 
