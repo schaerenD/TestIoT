@@ -177,6 +177,8 @@ void post_mqtt_temp(const String topic)
   log(readstr);
 }
 
+void
+
 void read_cpsms_readcommand()
 {
 
@@ -211,7 +213,6 @@ void read_cpsms_readcommand()
     String thirdParameter = teststring_tudli.substring(secondComma+1, thirdComma);
     String fourthParameter = teststring_tudli.substring(thirdComma+1, fourthComma);
     String fifthParameter = teststring_tudli.substring(fourthComma+1, endOfAnswer);
-
 
     log("\n\r First Parameter:");
     log(firstParameter);
