@@ -177,6 +177,18 @@ void post_mqtt_temp(const String topic)
   log(readstr);
 }
 
+void power_save_settings()
+{
+  send_at_command("AT+CPSMS?\r\n", "OK", 1000); // Read PSM Values
+  read_cpsms_readcommand();
+  send_at_command("AT+CPSMRDP\r\n", "OK", 1000); // eDRX Values
+}
+
+void read_cpsms_readcommand()
+{
+  
+}
+
 void setup() 
 {
   // put your setup code here, to run once:
@@ -201,8 +213,6 @@ void loop()
 {
 
   // put your main code here, to run repeatedly:
-  
-  
 
   //loop
   init_modem();
@@ -212,15 +222,32 @@ void loop()
   while(1)
   {
     //general_information();
-    ping("www.google.com");
+    //ping("www.google.com");
     //post_mqqt("v1/devices/me/telemetry");
-    post_mqtt_temp("v1/devices/me/telemetry");
-    post_mqtt_temp("v1/devices/me/telemetry");
-    post_mqtt_temp("v1/devices/me/telemetry");
-    post_mqtt_temp("v1/devices/me/telemetry");
-    post_mqtt_temp("v1/devices/me/telemetry");
-    post_mqtt_temp("v1/devices/me/telemetry");
-    post_mqtt_temp("v1/devices/me/telemetry");
-    //post_mqqt("");
+
+    send_at_command("AT+CPSMSTATUS=1\r\n", "OK", 1000);
+    send_at_command("AT+IPR=115200\r\n", "OK", 1000);
+    send_at_command("AT+CEREG=4\r\n", "OK", 1000);
+    send_at_command("AT+CEREG?\r\n", "OK", 1000);
+
+    power_save_settings();
+    power_save_settings();
+    power_save_settings();
+    power_save_settings();
+    power_save_settings();
+    power_save_settings();
+    power_save_settings();
+    power_save_settings();
+    power_save_settings();
+    power_save_settings();
+    power_save_settings();
+
+    //post_mqtt_temp("v1/devices/me/telemetry");
+    //post_mqtt_temp("v1/devices/me/telemetry");
+    //post_mqtt_temp("v1/devices/me/telemetry");
+    //post_mqtt_temp("v1/devices/me/telemetry");
+    //post_mqtt_temp("v1/devices/me/telemetry");
+    //post_mqtt_temp("v1/devices/me/telemetry");
+    //post_mqtt_temp("v1/devices/me/telemetry");
   }
 }
