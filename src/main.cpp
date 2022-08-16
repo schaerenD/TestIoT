@@ -177,16 +177,60 @@ void post_mqtt_temp(const String topic)
   log(readstr);
 }
 
+void read_cpsms_readcommand()
+{
+
+  String teststring_tudli = "AT+CPSMS?\r\n+CPSMS: 0,,,\"01100000\",\"00000000\"\n\r\n\rOK";
+
+  //log("PRESET:\r\n");
+  //log(teststring_tudli);
+  //delay(5000);
+
+  teststring_tudli = readstr;
+
+  //log("DTRY:\r\n");
+  //log(teststring_tudli);
+  //delay(5000);
+
+  String answerHeader = "+CPSMS: ";
+  int answerHeaderLength = answerHeader.length();
+
+
+  int startOfAnswer = teststring_tudli.indexOf("+CPSMS: ");
+  if (startOfAnswer != -1)
+  {
+    // First Parameter
+    int firstComma = teststring_tudli.indexOf(',');
+    int secondComma =  teststring_tudli.indexOf(',', firstComma + 1 );
+    int thirdComma =  teststring_tudli.indexOf(',', secondComma + 1 );
+    int fourthComma =  teststring_tudli.indexOf(',', thirdComma + 1 );
+    int endOfAnswer = teststring_tudli.length();
+
+    String firstParameter = teststring_tudli.substring(startOfAnswer+8, firstComma);
+    String secondParameter = teststring_tudli.substring(firstComma+1, secondComma);
+    String thirdParameter = teststring_tudli.substring(secondComma+1, thirdComma);
+    String fourthParameter = teststring_tudli.substring(thirdComma+1, fourthComma);
+    String fifthParameter = teststring_tudli.substring(fourthComma+1, endOfAnswer);
+
+
+    log("\n\r First Parameter:");
+    log(firstParameter);
+    log("\n\r Second Parameter:");
+    log(secondParameter);
+    log("\n\r Third Parameter:");
+    log(thirdParameter);
+    log("\n\r Fourth Parameter:");
+    log(fourthParameter);
+    log("\n\r Fifth Parameter:");
+    log(fifthParameter);
+  }
+}
+
 void power_save_settings()
 {
   send_at_command("AT+CPSMS?\r\n", "OK", 1000); // Read PSM Values
   read_cpsms_readcommand();
   send_at_command("AT+CPSMRDP\r\n", "OK", 1000); // eDRX Values
-}
-
-void read_cpsms_readcommand()
-{
-  
 }
 
 void setup() 
@@ -225,23 +269,25 @@ void loop()
     //ping("www.google.com");
     //post_mqqt("v1/devices/me/telemetry");
 
-    send_at_command("AT+CPSMSTATUS=1\r\n", "OK", 1000);
-    send_at_command("AT+IPR=115200\r\n", "OK", 1000);
-    send_at_command("AT+CEREG=4\r\n", "OK", 1000);
-    send_at_command("AT+CEREG?\r\n", "OK", 1000);
+    ////send_at_command("AT+CPSMSTATUS=1\r\n", "OK", 1000);
+    ////send_at_command("AT+IPR=115200\r\n", "OK", 1000);
+    ////send_at_command("AT+CEREG=4\r\n", "OK", 1000);
+    ////send_at_command("AT+CEREG?\r\n", "OK", 1000);
+
 
     power_save_settings();
-    power_save_settings();
-    power_save_settings();
-    power_save_settings();
-    power_save_settings();
-    power_save_settings();
-    power_save_settings();
-    power_save_settings();
-    power_save_settings();
-    power_save_settings();
-    power_save_settings();
 
+    ////power_save_settings();
+    ////power_save_settings();
+    ////power_save_settings();
+    ////power_save_settings();
+    ////power_save_settings();
+    ////power_save_settings();
+    ////power_save_settings();
+    ////power_save_settings();
+    ////power_save_settings();
+    ////power_save_settings();
+////
     //post_mqtt_temp("v1/devices/me/telemetry");
     //post_mqtt_temp("v1/devices/me/telemetry");
     //post_mqtt_temp("v1/devices/me/telemetry");
