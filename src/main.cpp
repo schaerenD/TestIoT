@@ -177,7 +177,84 @@ void post_mqtt_temp(const String topic)
   log(readstr);
 }
 
-void
+void read_csq_readcommdan()
+{
+  String teststring_tudli = "AT+CSQ\r\n+CSQ: 5,20\n\r\n\rOK";
+}
+
+void read_cedrxrdp_readcommand()
+{
+  String teststring_tudli = "AT+CEDRXRDP\r\n+CEDRXRDP: 5,\"0000\",\"0010\",\"0100\"\n\r\n\rOK";
+
+  String answerHeader = "+CEDRXRDP= ";
+  int answerHeaderLength = answerHeader.length();
+
+
+  int startOfAnswer = teststring_tudli.indexOf("+CEDRXRDP: ");
+  if (startOfAnswer != -1)
+  {
+    // First Parameter
+    int firstComma = teststring_tudli.indexOf(',');
+    int secondComma =  teststring_tudli.indexOf(',', firstComma + 1 );
+    int thirdComma =  teststring_tudli.indexOf(',', secondComma + 1 );
+    int endOfAnswer = teststring_tudli.length();
+
+    String firstParameter = teststring_tudli.substring(startOfAnswer+10, firstComma);
+    String secondParameter = teststring_tudli.substring(firstComma+1, secondComma);
+    String thirdParameter = teststring_tudli.substring(secondComma+1, thirdComma);
+    String fourthParameter = teststring_tudli.substring(thirdComma+1, endOfAnswer);
+
+    log("\n\r First Parameter:");
+    log(firstParameter);
+    log("\n\r Second Parameter:");
+    log(secondParameter);
+    log("\n\r Third Parameter:");
+    log(thirdParameter);
+    log("\n\r Fourth Parameter:");
+    log(fourthParameter);
+  }
+}
+
+void read_cpsmrdp_readcommand()
+{
+  String teststring_tudli = "AT+CPSMRDP\r\n+CPSMRDP: 0,20,14400,0,0,4320\n\r\n\rOK";
+
+  String answerHeader = "+CPSMRDP= ";
+  int answerHeaderLength = answerHeader.length();
+
+
+  int startOfAnswer = teststring_tudli.indexOf("+CPSMRDP: ");
+  if (startOfAnswer != -1)
+  {
+    // First Parameter
+    int firstComma = teststring_tudli.indexOf(',');
+    int secondComma =  teststring_tudli.indexOf(',', firstComma + 1 );
+    int thirdComma =  teststring_tudli.indexOf(',', secondComma + 1 );
+    int fourthComma =  teststring_tudli.indexOf(',', thirdComma + 1 );
+    int fifthComma =  teststring_tudli.indexOf(',', fourthComma + 1 );
+    int endOfAnswer = teststring_tudli.length();
+
+    String firstParameter = teststring_tudli.substring(startOfAnswer+10, firstComma);
+    String secondParameter = teststring_tudli.substring(firstComma+1, secondComma);
+    String thirdParameter = teststring_tudli.substring(secondComma+1, thirdComma);
+    String fourthParameter = teststring_tudli.substring(thirdComma+1, fourthComma);
+    String fifthParameter = teststring_tudli.substring(fourthComma+1, fifthComma);
+    String sixthParameter = teststring_tudli.substring(fifthComma+1, endOfAnswer);
+
+    log("\n\r First Parameter:");
+    log(firstParameter);
+    log("\n\r Second Parameter:");
+    log(secondParameter);
+    log("\n\r Third Parameter:");
+    log(thirdParameter);
+    log("\n\r Fourth Parameter:");
+    log(fourthParameter);
+    log("\n\r Fifth Parameter:");
+    log(fifthParameter);
+    log("\n\r Sixth Parameter:");
+    log(sixthParameter);
+  }
+}
 
 void read_cpsms_readcommand()
 {
@@ -258,7 +335,8 @@ void loop()
 {
 
   // put your main code here, to run repeatedly:
-
+  read_cpsmrdp_readcommand();
+  delay(100000);
   //loop
   init_modem();
   init_mqqt("thingsboard.cloud","1883");
