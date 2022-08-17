@@ -19,10 +19,42 @@ const String MQTT_Subtopic = "sub_topic";
 
 M5GFX display;
 M5Canvas canvas(&display);
+M5Canvas sub_canvas1(&display);
+M5Canvas sub_canvas2(&display);
+M5Canvas sub_canvas_text(&display);
+
 
 M5_SIM7080G device;
 
 String readstr;
+
+void setup_canvas()
+{
+  sub_canvas1.createSprite(30, 30);
+  sub_canvas1.fillSprite(TFT_BLUE);
+  sub_canvas1.println("sub1");
+  sub_canvas1.fillCircle(15, 15, 5, TFT_YELLOW);
+  sub_canvas2.createSprite(30, 30);
+  sub_canvas2.fillSprite(TFT_GREEN);
+  sub_canvas2.println("sub2");
+  sub_canvas2.fillTriangle(15, 10, 0, 30, 30, 30, TFT_BLUE);
+  
+  sub_canvas1.pushSprite(5, 30);
+  sub_canvas2.pushSprite(40, 30);
+}
+
+void setup_canvas_write_test()
+{
+  sub_canvas_text.createSprite(100, 100);
+  sub_canvas_text.fillSprite(TFT_BLUE);
+  sub_canvas_text.pushSprite(40, 30);
+}
+
+void canvas_write_test(String str)
+{
+  sub_canvas_text.println(str);
+  sub_canvas_text.pushSprite(40, 30);
+}
 
 void log(String str) 
 {
@@ -181,7 +213,7 @@ void read_csq_readcommand()
 {
   String response_string = readstr;//"AT+CEDRXRDP\r\n+CEDRXRDP: 5,\"0000\",\"0010\",\"0100\"\n\r\n\rOK";
 
-  String answerHeader = "+CSQ= ";
+  String answerHeader = "+CSQ: ";
   int answerHeaderLength = answerHeader.length();
 
   int startOfAnswer = response_string.indexOf(answerHeader);
@@ -206,7 +238,7 @@ void read_cedrxrdp_readcommand()
 {
   String response_string = readstr;//"AT+CEDRXRDP\r\n+CEDRXRDP: 5,\"0000\",\"0010\",\"0100\"\n\r\n\rOK";
 
-  String answerHeader = "+CEDRXRDP= ";
+  String answerHeader = "+CEDRXRDP: ";
   int answerHeaderLength = answerHeader.length();
 
   int startOfAnswer = response_string.indexOf(answerHeader);
@@ -343,8 +375,16 @@ void setup()
 void loop() 
 {
 
+  setup_canvas_write_test();
+  canvas_write_test("BLA");
+  canvas_write_test("BLA");
+  canvas_write_test("BLA");
+  canvas_write_test("BLA");
+  canvas_write_test("BLA");
+  canvas_write_test("sub_canvas_textsub_canvas_textsub_canvas_textsub_canvas_textsub_canvas_textsub_canvas_textsub_canvas_textsub_canvas_textsub_canvas_textsub_canvas_textsub_canvas_textsub_canvas_textsub_canvas_text");
+
+
   // put your main code here, to run repeatedly:
-  read_cpsmrdp_readcommand();
   //loop
   init_modem();
   init_mqqt("thingsboard.cloud","1883");
