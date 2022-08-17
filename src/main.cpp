@@ -73,7 +73,6 @@ void init_modem()
   send_at_command("AT+CGDCONT=1,\"IP\",\"gprs.swisscom.ch\"\r\n", "OK", 1000);// Set PDP Context with APN, IP and DHCP
   send_at_command("AT+CEREG=1\r\n", "OK", 1000);// ???
   send_at_command("AT+CNCFG=0,1,\"gprs.swisscom.ch\"\r\n", "OK", 1000);// Activate Context
-
   send_at_command("AT+CGATT=1\r\n", "OK", 1000);
 }
 
@@ -81,6 +80,7 @@ void general_information()
 {
   log("--------------------\r\n");
   send_at_command("AT+CSQ\r\n", "OK", 1000);
+  //read_csq_readcommand();
   send_at_command("AT+CGATT?\r\n", "OK", 1000);
   send_at_command("AT+COPS?\r\n", "OK", 1000);
   send_at_command("AT+CEREG?\r\n", "OK", 1000);
@@ -177,9 +177,29 @@ void post_mqtt_temp(const String topic)
   log(readstr);
 }
 
-void read_csq_readcommdan()
+void read_csq_readcommand()
 {
-  String response_string = "AT+CSQ\r\n+CSQ: 5,20\n\r\n\rOK";
+  String response_string = readstr;//"AT+CEDRXRDP\r\n+CEDRXRDP: 5,\"0000\",\"0010\",\"0100\"\n\r\n\rOK";
+
+  String answerHeader = "+CSQ= ";
+  int answerHeaderLength = answerHeader.length();
+
+  int startOfAnswer = response_string.indexOf(answerHeader);
+  if (startOfAnswer != -1)
+  {
+    // First Parameter
+    int firstComma = response_string.indexOf(',');
+    int secondComma =  response_string.indexOf(',', firstComma + 1 );
+    int endOfAnswer = response_string.length();
+
+    String firstParameter = response_string.substring(startOfAnswer+10, firstComma);
+    String secondParameter = response_string.substring(firstComma+1, endOfAnswer);
+
+    log("\n\r First Parameter:");
+    log(firstParameter);
+    log("\n\r Second Parameter:");
+    log(secondParameter);
+  }
 }
 
 void read_cedrxrdp_readcommand()
@@ -256,7 +276,6 @@ void read_cpsmrdp_readcommand()
 
 void read_cpsms_readcommand()
 {
-
   String response_string = readstr; //"AT+CPSMS?\r\n+CPSMS: 0,,,\"01100000\",\"00000000\"\n\r\n\rOK";
 
   String answerHeader = "+CPSMS: ";
@@ -299,7 +318,6 @@ void power_save_settings()
   read_cpsms_readcommand();
   send_at_command("AT+CEDRXRDP\r\n", "OK", 1000); // eDRX Values
   read_cedrxrdp_readcommand();
-  delay(5000);
 }
 
 void setup() 
@@ -344,6 +362,10 @@ void loop()
     ////send_at_command("AT+CEREG?\r\n", "OK", 1000);
 
     power_save_settings();
+    send_at_command("AT+CSQ\r\n", "OK", 1000); // eDRX Values
+    read_csq_readcommand();
+
+    //general_information();
 
     ////power_save_settings();
     ////power_save_settings();
