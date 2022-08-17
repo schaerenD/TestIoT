@@ -216,6 +216,9 @@ void read_csq_readcommand()
   String answerHeader = "+CSQ: ";
   int answerHeaderLength = answerHeader.length();
 
+  int rssiValue;
+  int berValue;
+
   int startOfAnswer = response_string.indexOf(answerHeader);
   if (startOfAnswer != -1)
   {
@@ -224,13 +227,28 @@ void read_csq_readcommand()
     int secondComma =  response_string.indexOf(',', firstComma + 1 );
     int endOfAnswer = response_string.length();
 
-    String firstParameter = response_string.substring(startOfAnswer+10, firstComma);
+    String firstParameter = response_string.substring(startOfAnswer+answerHeaderLength, firstComma);
     String secondParameter = response_string.substring(firstComma+1, endOfAnswer);
+
+    firstParameter = "24";
+    int lengthString = firstParameter.length();
+    rssiValue = firstParameter.toInt();
+
+    int rssiValue_dBm = 52 + (31 - rssiValue)*2;
+
+    String rssiString = "";
+    rssiString = rssiString.concat(lengthString);
 
     log("\n\r First Parameter:");
     log(firstParameter);
     log("\n\r Second Parameter:");
     log(secondParameter);
+    log("\n\r RSSI Parameter:");
+    log(rssiValue);    
+    log("\n\r RSSI Parameter:");
+    log(rssiValue);    
+    log("\n\r Calc Parameter:");
+    log(rssiValue);
   }
 }
 
@@ -250,7 +268,7 @@ void read_cedrxrdp_readcommand()
     int thirdComma =  response_string.indexOf(',', secondComma + 1 );
     int endOfAnswer = response_string.length();
 
-    String firstParameter = response_string.substring(startOfAnswer+10, firstComma);
+    String firstParameter = response_string.substring(startOfAnswer+answerHeaderLength, firstComma);
     String secondParameter = response_string.substring(firstComma+1, secondComma);
     String thirdParameter = response_string.substring(secondComma+1, thirdComma);
     String fourthParameter = response_string.substring(thirdComma+1, endOfAnswer);
@@ -284,7 +302,7 @@ void read_cpsmrdp_readcommand()
     int fifthComma =  response_string.indexOf(',', fourthComma + 1 );
     int endOfAnswer = response_string.length();
 
-    String firstParameter = response_string.substring(startOfAnswer+10, firstComma);
+    String firstParameter = response_string.substring(startOfAnswer+answerHeaderLength, firstComma);
     String secondParameter = response_string.substring(firstComma+1, secondComma);
     String thirdParameter = response_string.substring(secondComma+1, thirdComma);
     String fourthParameter = response_string.substring(thirdComma+1, fourthComma);
@@ -323,7 +341,7 @@ void read_cpsms_readcommand()
     int fourthComma =  response_string.indexOf(',', thirdComma + 1 );
     int endOfAnswer = response_string.length();
 
-    String firstParameter = response_string.substring(startOfAnswer+8, firstComma);
+    String firstParameter = response_string.substring(startOfAnswer+answerHeaderLength, firstComma);
     String secondParameter = response_string.substring(firstComma+1, secondComma);
     String thirdParameter = response_string.substring(secondComma+1, thirdComma);
     String fourthParameter = response_string.substring(thirdComma+1, fourthComma);
@@ -375,13 +393,35 @@ void setup()
 void loop() 
 {
 
-  setup_canvas_write_test();
-  canvas_write_test("BLA");
-  canvas_write_test("BLA");
-  canvas_write_test("BLA");
-  canvas_write_test("BLA");
-  canvas_write_test("BLA");
-  canvas_write_test("sub_canvas_textsub_canvas_textsub_canvas_textsub_canvas_textsub_canvas_textsub_canvas_textsub_canvas_textsub_canvas_textsub_canvas_textsub_canvas_textsub_canvas_textsub_canvas_textsub_canvas_text");
+  while(1)
+  {
+    String myString;
+    myString = "125";
+
+    //int bufferLength;
+    //bufferLength = myString.length() + 2;
+    //char buffer[bufferLength];
+    //myString.toCharArray(buffer, bufferLength);
+    //buffer[3] = '\0';
+    //int Number;
+    //Number = atoi(buffer);
+
+
+    int myInt;
+    myInt = myString.toInt();
+    //log(myInt);
+    String asdfljsdafkjlh = String(myInt, DEC); 
+
+  }
+
+
+  //setup_canvas_write_test();
+  //canvas_write_test("BLA");
+  //canvas_write_test("BLA");
+  //canvas_write_test("BLA");
+  //canvas_write_test("BLA");
+  //canvas_write_test("BLA");
+  //canvas_write_test("sub_canvas_textsub_canvas_textsub_canvas_textsub_canvas_textsub_canvas_textsub_canvas_textsub_canvas_textsub_canvas_textsub_canvas_textsub_canvas_textsub_canvas_textsub_canvas_textsub_canvas_text");
 
 
   // put your main code here, to run repeatedly:
@@ -396,6 +436,13 @@ void loop()
     //ping("www.google.com");
     //post_mqqt("v1/devices/me/telemetry");
 
+    //power_save_settings();
+
+    send_at_command("AT+CSQ\r\n", "OK", 1000);
+    read_csq_readcommand();
+    delay(1000);
+    continue;
+
     ////send_at_command("AT+CPSMSTATUS=1\r\n", "OK", 1000);
     ////send_at_command("AT+IPR=115200\r\n", "OK", 1000);
     ////send_at_command("AT+CEREG=4\r\n", "OK", 1000);
@@ -406,18 +453,6 @@ void loop()
     read_csq_readcommand();
 
     //general_information();
-
-    ////power_save_settings();
-    ////power_save_settings();
-    ////power_save_settings();
-    ////power_save_settings();
-    ////power_save_settings();
-    ////power_save_settings();
-    ////power_save_settings();
-    ////power_save_settings();
-    ////power_save_settings();
-    ////power_save_settings();
-////
     //post_mqtt_temp("v1/devices/me/telemetry");
     //post_mqtt_temp("v1/devices/me/telemetry");
     //post_mqtt_temp("v1/devices/me/telemetry");
