@@ -23,7 +23,6 @@ M5Canvas sub_canvas1(&display);
 M5Canvas sub_canvas2(&display);
 M5Canvas sub_canvas_text(&display);
 
-
 M5_SIM7080G device;
 
 String readstr;
@@ -230,25 +229,11 @@ void read_csq_readcommand()
     String firstParameter = response_string.substring(startOfAnswer+answerHeaderLength, firstComma);
     String secondParameter = response_string.substring(firstComma+1, endOfAnswer);
 
-    firstParameter = "24";
-    int lengthString = firstParameter.length();
     rssiValue = firstParameter.toInt();
-
     int rssiValue_dBm = 52 + (31 - rssiValue)*2;
 
-    String rssiString = "";
-    rssiString = rssiString.concat(lengthString);
-
-    log("\n\r First Parameter:");
-    log(firstParameter);
-    log("\n\r Second Parameter:");
-    log(secondParameter);
-    log("\n\r RSSI Parameter:");
-    log(rssiValue);    
-    log("\n\r RSSI Parameter:");
-    log(rssiValue);    
-    log("\n\r Calc Parameter:");
-    log(rssiValue);
+    String rssiValue_String = String(rssiValue, DEC);
+    String rssiValue_dBm_String = String(rssiValue_dBm, DEC);
   }
 }
 
@@ -281,6 +266,16 @@ void read_cedrxrdp_readcommand()
     log(thirdParameter);
     log("\n\r Fourth Parameter:");
     log(fourthParameter);
+
+    int answer_edrx_actType = firstParameter.toInt();
+    int answer_edrx_requested_eDRX_value = secondParameter.toInt();
+    int answer_edrx_nw_provided_eDRX_value = thirdParameter.toInt();
+    int answer_edrx_paging_time_window = fourthParameter.toInt();
+
+    String answer_requested_eDRX_value_String = String(answer_requested_eDRX_value, BIN);
+    String answer_nw_provided_eDRX_value_String = String(answer_nw_provided_eDRX_value, BIN);
+
+
   }
 }
 
@@ -321,6 +316,13 @@ void read_cpsmrdp_readcommand()
     log(fifthParameter);
     log("\n\r Sixth Parameter:");
     log(sixthParameter);
+
+    int answer_psm_mode = firstParameter.toInt();
+    int answer_psm_requested_active_time = secondParameter.toInt();
+    int answer_psm_requested_periodic_tau = thirdParameter.toInt();
+    int answer_psm_network_active_time = fourthParameter.toInt();
+    int answer_psm_network_T3412_ext_value = fourthParameter.toInt();
+    int answer_psm_network_active_time = fourthParameter.toInt();
   }
 }
 
@@ -357,6 +359,8 @@ void read_cpsms_readcommand()
     log(fourthParameter);
     log("\n\r Fifth Parameter:");
     log(fifthParameter);
+
+
   }
 }
 
@@ -392,29 +396,6 @@ void setup()
 
 void loop() 
 {
-
-  while(1)
-  {
-    String myString;
-    myString = "125";
-
-    //int bufferLength;
-    //bufferLength = myString.length() + 2;
-    //char buffer[bufferLength];
-    //myString.toCharArray(buffer, bufferLength);
-    //buffer[3] = '\0';
-    //int Number;
-    //Number = atoi(buffer);
-
-
-    int myInt;
-    myInt = myString.toInt();
-    //log(myInt);
-    String asdfljsdafkjlh = String(myInt, DEC); 
-    
-  }
-
-
   //setup_canvas_write_test();
   //canvas_write_test("BLA");
   //canvas_write_test("BLA");
