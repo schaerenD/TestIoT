@@ -397,15 +397,6 @@ void setup()
 
 void loop() 
 {
-  //setup_canvas_write_test();
-  //canvas_write_test("BLA");
-  //canvas_write_test("BLA");
-  //canvas_write_test("BLA");
-  //canvas_write_test("BLA");
-  //canvas_write_test("BLA");
-  //canvas_write_test("sub_canvas_textsub_canvas_textsub_canvas_textsub_canvas_textsub_canvas_textsub_canvas_textsub_canvas_textsub_canvas_textsub_canvas_textsub_canvas_textsub_canvas_textsub_canvas_textsub_canvas_text");
-
-
   // put your main code here, to run repeatedly:
   //loop
   init_modem();
@@ -419,7 +410,7 @@ void loop()
     //post_mqqt("v1/devices/me/telemetry");
 
     //power_save_settings();
-    send_at_command("AT+CEDRXDP\r\n", "OK", 1000);
+    send_at_command("AT+CEDRXRDP\r\n", "OK", 1000);
     read_cedrxrdp_readcommand();
     delay(3000);
 
