@@ -11,6 +11,36 @@ float tmp      = 0.0;
 float hum      = 0.0;
 float pressure = 0.0;
 
+// PSM Values
+int TAU_T3412_Unit = 2; // T3412 
+int TAU_T3412_Value = 1;
+const uint32_t TAU_Unit_Values_seconds[7] = {600, 3600, 36000, 2, 30, 60, 1152000};
+
+int Activetime_T3324_Unit = 2; // T3324  
+int Activetime_T3324_Value = 1;
+const uint32_t Activetime_Unit_Values_seconds[7] = {2, 60, 360};
+
+// eDRX Values
+int eDRX_Unit = 2;  // 
+int eDRX_Value = 1;
+const uint32_t eDRX_Unit_Values_seconds[7] = {600, 3600, 36000, 2, 30, 60, 1152000};
+
+int TAU_T3412_Time_int = 0; 
+String TAU_T3412_Time_String = "";
+String TAU_T3412_Time_Command_String = "";
+
+int Activetime_T3324_Time_int = 0; 
+String Activetime_T3324_Time_String = "";
+int Activetime_T3324_Time_Command_int; // Set Base
+String Activetime_T3324_Time_Command_String = "";
+
+int eDRX_Time_int = 0; 
+String eDRX_Time_String = "";
+int eDRX_Time_Command_int = 0;
+String eDRX_Time_Command_String = ""; 
+
+/****************************************************************************************/
+
 const String MQTT_Broker_URL = "thingsboard.cloud";
 const String MQTT_Broker_Port = "1883";
 const int MQTT_Broker_Keeptime = 60;
@@ -26,6 +56,36 @@ M5Canvas sub_canvas_text(&display);
 M5_SIM7080G device;
 
 String readstr;
+
+void log(String str) 
+{
+    Serial.print(str);
+    canvas.print(str);
+    canvas.pushSprite(0, 0);
+}
+
+void calc_TAU_Activetime_eDRX()
+{
+  int TimeBaseSeconds;
+
+  // Calc TAU
+  TimeBaseSeconds = TAU_Unit_Values_seconds[TAU_T3412_Unit];
+  TAU_T3412_Time_int = TimeBaseSeconds*TAU_T3412_Value;
+  TAU_T3412_Time_String = String(TAU_T3412_Time_int);
+
+  // Calc Activetime
+  TimeBaseSeconds = Activetime_Unit_Values_seconds[Activetime_T3324_Unit];
+  Activetime_T3324_Time_int = TimeBaseSeconds*Activetime_T3324_Time_int;
+  Activetime_T3324_Time_String = String(Activetime_T3324_Time_int);
+  Activetime_T3324_Time_Command_int = (0b11100000 & (Activetime_T3324_Unit<<5));  // Set Unit
+  Activetime_T3324_Time_Command_int = Activetime_T3324_Time_Command_int | (0b00011111 & Activetime_T3324_Value);  // Set Value
+
+  // Calc Activetime
+  TimeBaseSeconds = eDRX_Unit_Values_seconds[eDRX_Unit];
+  eDRX_Time_int = TimeBaseSeconds*eDRX_Time_int;
+  eDRX_Time_String = String(eDRX_Time_int);
+
+}
 
 void setup_canvas()
 {
@@ -55,12 +115,7 @@ void canvas_write_test(String str)
   sub_canvas_text.pushSprite(40, 30);
 }
 
-void log(String str) 
-{
-    Serial.print(str);
-    canvas.print(str);
-    canvas.pushSprite(0, 0);
-}
+
 
 void send_at_command(const String atcommand, const String answer, int waittime)
 {
@@ -395,14 +450,31 @@ void setup()
   qmp6988.init();
 }
 
+void test0()
+{
+  while(1)
+  {
+    continue;
+  }
+}
+
+void test1()
+{
+  while(1)
+  {
+    calc_TAU_Activetime_eDRX();
+  }
+}
+
+
 void loop() 
 {
   // put your main code here, to run repeatedly:
-  //loop
+  test1();
   init_modem();
   init_mqqt("thingsboard.cloud","1883");
-  //init_mqqt("test.mosquitto.org","1883");
-
+  test1();
+  
   while(1)
   {
     //general_information();
