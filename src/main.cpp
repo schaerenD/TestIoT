@@ -272,8 +272,9 @@ void read_cedrxrdp_readcommand()
     int answer_edrx_nw_provided_eDRX_value = thirdParameter.toInt();
     int answer_edrx_paging_time_window = fourthParameter.toInt();
 
-    String answer_requested_eDRX_value_String = String(answer_requested_eDRX_value, BIN);
-    String answer_nw_provided_eDRX_value_String = String(answer_nw_provided_eDRX_value, BIN);
+    String answer_edrx_requested_eDRX_value_String = String(answer_edrx_requested_eDRX_value, BIN);
+    String answer_edrx_nw_provided_eDRX_value_String = String(answer_edrx_nw_provided_eDRX_value, BIN);
+    String answer_edrx_paging_time_window_String = String(answer_edrx_paging_time_window, BIN);
 
 
   }
@@ -321,8 +322,8 @@ void read_cpsmrdp_readcommand()
     int answer_psm_requested_active_time = secondParameter.toInt();
     int answer_psm_requested_periodic_tau = thirdParameter.toInt();
     int answer_psm_network_active_time = fourthParameter.toInt();
-    int answer_psm_network_T3412_ext_value = fourthParameter.toInt();
-    int answer_psm_network_active_time = fourthParameter.toInt();
+    int answer_psm_network_T3412_ext_value = fifthParameter.toInt();
+    int answer_psm_network_T3412_value = sixthParameter.toInt();
   }
 }
 
@@ -418,20 +419,22 @@ void loop()
     //post_mqqt("v1/devices/me/telemetry");
 
     //power_save_settings();
+    send_at_command("AT+CEDRXDP\r\n", "OK", 1000);
+    read_cedrxrdp_readcommand();
+    delay(3000);
 
-    send_at_command("AT+CSQ\r\n", "OK", 1000);
-    read_csq_readcommand();
-    delay(1000);
-    continue;
+    send_at_command("AT+CPSMRDP\r\n", "OK", 1000);
+    read_cpsmrdp_readcommand();
+    delay(3000);
 
     ////send_at_command("AT+CPSMSTATUS=1\r\n", "OK", 1000);
     ////send_at_command("AT+IPR=115200\r\n", "OK", 1000);
     ////send_at_command("AT+CEREG=4\r\n", "OK", 1000);
     ////send_at_command("AT+CEREG?\r\n", "OK", 1000);
 
-    power_save_settings();
-    send_at_command("AT+CSQ\r\n", "OK", 1000); // eDRX Values
-    read_csq_readcommand();
+    //power_save_settings();
+    //send_at_command("AT+CSQ\r\n", "OK", 1000); // eDRX Values
+    //read_csq_readcommand();
 
     //general_information();
     //post_mqtt_temp("v1/devices/me/telemetry");
