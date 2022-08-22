@@ -52,6 +52,8 @@ const int MQTT_Broker_Keeptime = 60;
 const int CLIENTID = 60;
 const String MQTT_Subtopic = "sub_topic";
 
+int forgrundDisplay = 0;
+
 M5GFX display;
 M5Canvas canvas(&display);
 M5Canvas sub_canvas1(&display);
@@ -65,6 +67,11 @@ String readstr;
 void ticker_callback()
 {
   seconds++;
+}
+
+void tickerInit()
+{
+  standartTimer.attach_ms(1000,ticker_callback);
 }
 
 void log(String str) 
@@ -490,7 +497,7 @@ void MeteoDisplay()
   M5Canvas MeteoCanvas(&display);
   String OutputSting;
 
-  OutputSting = "Temperature: " + String(tmp) + "\r\nHumidity: " + String(hum) + "\r\nPressure: " + String(pressure);
+  OutputSting = "Temperature: " + String(tmp) + "°C\r\nHumidity: " + String(hum) + "%\r\nPressure: " + String(seconds) + "Pa";
 
   MeteoCanvas.createSprite(230, 230);
   MeteoCanvas.fillSprite(TFT_BLACK);
@@ -498,8 +505,6 @@ void MeteoDisplay()
   MeteoCanvas.println("METEO\n\r");
   MeteoCanvas.println(OutputSting);
   MeteoCanvas.pushSprite(0, 0);
-
-  delay(1000000);
 }
 
 void ValuesDisplay()
@@ -507,36 +512,52 @@ void ValuesDisplay()
   M5Canvas ValuesCanvas(&display);
   String OutputSting;
 
-  OutputSting = "Temperature: " + String(tmp) + "\r\Active: " + String(hum) + "\r\nPressure: " + String(pressure);
+  OutputSting = "Temperature: " + String(tmp) + "\r\nActive: " + String(hum) + "\r\nPressure: " + String(pressure);
 
-  ValuesCanvas.createSprite(30, 30);
+  ValuesCanvas.createSprite(230, 230);
   ValuesCanvas.fillSprite(TFT_BLUE);
-  ValuesCanvas.println("VALUES");
+  ValuesCanvas.println("VALUES\n\r");
+  ValuesCanvas.println(OutputSting);
+  ValuesCanvas.pushSprite(0, 0);
 
 }
 
 void CategoriesDisplay()
 {
   M5Canvas CategoriesCanvas(&display);
-  CategoriesCanvas.createSprite(30, 30);
+  String OutputSting;
+
+  OutputSting = "Temperature: " + String(tmp) + "\r\nActive: " + String(hum) + "\r\nPressure: " + String(pressure);
+
+  CategoriesCanvas.createSprite(230, 230);
   CategoriesCanvas.fillSprite(TFT_BLUE);
   CategoriesCanvas.println("CATEGORIES\n\r");
-
-  CategoriesCanvas.println("CATEGORIES");
+  CategoriesCanvas.println(OutputSting);
+  CategoriesCanvas.pushSprite(0, 0);
 }
 
 void test2_Screen_SM()
 {
-  while(1)
+  switch (forgrundDisplay)
   {
-    // Screen 1
-    MeteoDisplay(); // Display Meteo
-    // Screen 2
-    ValuesDisplay();  // Display Values
-    // Screen 3
-    CategoriesDisplay(); // Display Kategorie
-    // Screen
+    case 0:
+      MeteoDisplay(); // Display Meteo
+      break;
+    case 1:
+      ValuesDisplay();  // Display Values
+      break;
+    case 2:
+      CategoriesDisplay(); // Display Kategorie
+      break;
+    default:
+      forgrundDisplay = 0;
+      break;
   }
+  forgrundDisplay++;
+  if (forgrundDisplay > 2)
+  {
+    forgrundDisplay = 0;
+  }    
 }
 
 void test3_takeMeteo_SM()
@@ -588,15 +609,22 @@ void test5_take_Info()
 void loop() 
 {
   // put your main code here, to run repeatedly:
-  test3_takeMeteo_SM();
-  test2_Screen_SM();
-  test1();
-  init_modem();
-  init_mqqt("thingsboard.cloud","1883");
-  test1();
+  tickerInit();
+
   
+  
+  
+  ////////test1();  // Settings Calcultaion
+
+  //init_modem();
+  //init_mqqt("thingsboard.cloud","1883");
   while(1)
   {
+    test2_Screen_SM();
+    continue;
+
+    test3_takeMeteo_SM();
+  
     //general_information();
     //ping("www.google.com");
     //post_mqqt("v1/devices/me/telemetry");
@@ -610,22 +638,10 @@ void loop()
     read_cpsmrdp_readcommand();
     delay(3000);
 
-    ////send_at_command("AT+CPSMSTATUS=1\r\n", "OK", 1000);
-    ////send_at_command("AT+IPR=115200\r\n", "OK", 1000);
-    ////send_at_command("AT+CEREG=4\r\n", "OK", 1000);
-    ////send_at_command("AT+CEREG?\r\n", "OK", 1000);
-
     //power_save_settings();
     //send_at_command("AT+CSQ\r\n", "OK", 1000); // eDRX Values
     //read_csq_readcommand();
 
-    //general_information();
-    //post_mqtt_temp("v1/devices/me/telemetry");
-    //post_mqtt_temp("v1/devices/me/telemetry");
-    //post_mqtt_temp("v1/devices/me/telemetry");
-    //post_mqtt_temp("v1/devices/me/telemetry");
-    //post_mqtt_temp("v1/devices/me/telemetry");
-    //post_mqtt_temp("v1/devices/me/telemetry");
     //post_mqtt_temp("v1/devices/me/telemetry");
   }
 }
