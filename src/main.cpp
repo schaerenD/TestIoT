@@ -3,9 +3,12 @@
 #include "M5_ENV.h"
 #include "M5GFX.h"
 #include "M5_SIM7080G.h"
+#include "Ticker.h"
 
 SHT3X sht30;
 QMP6988 qmp6988;
+
+Ticker standartTimer;
 
 float tmp      = 0.0;
 float hum      = 0.0;
@@ -19,6 +22,8 @@ const uint32_t TAU_Unit_Values_seconds[7] = {600, 3600, 36000, 2, 30, 60, 115200
 int Activetime_T3324_Unit = 2; // T3324  
 int Activetime_T3324_Value = 1;
 const uint32_t Activetime_Unit_Values_seconds[7] = {2, 60, 360};
+
+uint8_t seconds = 0;
 
 // eDRX Values
 int eDRX_Unit = 2;  // 
@@ -56,6 +61,11 @@ M5Canvas sub_canvas_text(&display);
 M5_SIM7080G device;
 
 String readstr;
+
+void ticker_callback()
+{
+  seconds++;
+}
 
 void log(String str) 
 {
@@ -114,8 +124,6 @@ void canvas_write_test(String str)
   sub_canvas_text.println(str);
   sub_canvas_text.pushSprite(40, 30);
 }
-
-
 
 void send_at_command(const String atcommand, const String answer, int waittime)
 {
@@ -420,7 +428,7 @@ void read_cpsms_readcommand()
   }
 }
 
-void power_save_settings()
+void DEB_power_save_settings()
 {
   send_at_command("AT+CPSMS?\r\n", "OK", 1000); // Read PSM Values
   read_cpsms_readcommand();
@@ -428,6 +436,17 @@ void power_save_settings()
   read_cpsms_readcommand();
   send_at_command("AT+CEDRXRDP\r\n", "OK", 1000); // eDRX Values
   read_cedrxrdp_readcommand();
+}
+
+void psm_settings()
+{
+  //
+  send_at_command("AT+CPSMS?\r\n", "OK", 1000); // Read PSM Values
+}
+
+void edrx_settings()
+{
+
 }
 
 void setup() 
@@ -466,10 +485,111 @@ void test1()
   }
 }
 
+void MeteoDisplay()
+{
+  M5Canvas MeteoCanvas(&display);
+  String OutputSting;
+
+  OutputSting = "Temperature: " + String(tmp) + "\r\nHumidity: " + String(hum) + "\r\nPressure: " + String(pressure);
+
+  MeteoCanvas.createSprite(230, 230);
+  MeteoCanvas.fillSprite(TFT_BLACK);
+  //MeteoCanvas.setFont(Font0);
+  MeteoCanvas.println("METEO\n\r");
+  MeteoCanvas.println(OutputSting);
+  MeteoCanvas.pushSprite(0, 0);
+
+  delay(1000000);
+}
+
+void ValuesDisplay()
+{
+  M5Canvas ValuesCanvas(&display);
+  String OutputSting;
+
+  OutputSting = "Temperature: " + String(tmp) + "\r\Active: " + String(hum) + "\r\nPressure: " + String(pressure);
+
+  ValuesCanvas.createSprite(30, 30);
+  ValuesCanvas.fillSprite(TFT_BLUE);
+  ValuesCanvas.println("VALUES");
+
+}
+
+void CategoriesDisplay()
+{
+  M5Canvas CategoriesCanvas(&display);
+  CategoriesCanvas.createSprite(30, 30);
+  CategoriesCanvas.fillSprite(TFT_BLUE);
+  CategoriesCanvas.println("CATEGORIES\n\r");
+
+  CategoriesCanvas.println("CATEGORIES");
+}
+
+void test2_Screen_SM()
+{
+  while(1)
+  {
+    // Screen 1
+    MeteoDisplay(); // Display Meteo
+    // Screen 2
+    ValuesDisplay();  // Display Values
+    // Screen 3
+    CategoriesDisplay(); // Display Kategorie
+    // Screen
+  }
+}
+
+void test3_takeMeteo_SM()
+{
+  pressure = qmp6988.calcPressure();
+  if (sht30.get() == 0)   // Obtain the data of shT30.
+  {
+    tmp = sht30.cTemp;    // Store the temperature obtained from shT30.
+    hum = sht30.humidity; // Store the humidity obtained from the SHT30.
+  }
+  else 
+  {
+    tmp = 0;
+    hum = 0;
+  }
+}
+
+void test4_Post_SM(String topic)
+{
+  String JSON_Header = "{\"temperature\": ";
+  String JSON_Second_Part = ",\r\n \"humidity\": ";
+  String JSON_Third_Part = ",\r\n \"pressure\": ";
+  String JSON_End = "}";
+  String JSON1;
+
+  // String JOSN
+  JSON1 = JSON_Header + tmp + JSON_Second_Part + hum + JSON_Third_Part + pressure + JSON_End;
+  int JSON_length = JSON1.length();
+
+  String JSON_length_String = "";
+  JSON_length_String.concat(JSON_length);
+
+  send_at_command("AT+SMSTATE?\r\n", "OK", 1000);
+  
+  //device.sendMsg("AT+SMPUB=\"v1/devices/me/telemetry\",5,1,1\r\n");
+  String Conf = "AT+SMPUB=\"" + topic + "\"," + JSON_length_String + ",0,0\r\n";
+  device.sendMsg(Conf);
+  delay(500);
+  device.sendMsg(JSON1);
+  readstr = device.waitMsg(5000);
+  log(readstr);
+}
+
+void test5_take_Info()
+{
+  // read Command;
+}
 
 void loop() 
 {
   // put your main code here, to run repeatedly:
+  test3_takeMeteo_SM();
+  test2_Screen_SM();
   test1();
   init_modem();
   init_mqqt("thingsboard.cloud","1883");
