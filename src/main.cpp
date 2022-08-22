@@ -52,7 +52,7 @@ const int MQTT_Broker_Keeptime = 60;
 const int CLIENTID = 60;
 const String MQTT_Subtopic = "sub_topic";
 
-int forgrundDisplay = 0;
+
 
 M5GFX display;
 M5Canvas canvas(&display);
@@ -447,13 +447,13 @@ void DEB_power_save_settings()
 
 void psm_settings()
 {
-  //
-  send_at_command("AT+CPSMS?\r\n", "OK", 1000); // Read PSM Values
+    send_at_command("AT+CPSMS=1,,,\"01011111\",\"00000001\"\r\n", "OK", 1000); // Set PSM Values
+    send_at_command("AT+CPSMS?\r\n", "OK", 1000); // Read PSM Values
 }
 
 void edrx_settings()
 {
-
+  
 }
 
 void setup() 
@@ -501,7 +501,6 @@ void MeteoDisplay()
 
   MeteoCanvas.createSprite(230, 230);
   MeteoCanvas.fillSprite(TFT_BLACK);
-  //MeteoCanvas.setFont(Font0);
   MeteoCanvas.println("METEO\n\r");
   MeteoCanvas.println(OutputSting);
   MeteoCanvas.pushSprite(0, 0);
@@ -515,7 +514,7 @@ void ValuesDisplay()
   OutputSting = "Temperature: " + String(tmp) + "\r\nActive: " + String(hum) + "\r\nPressure: " + String(pressure);
 
   ValuesCanvas.createSprite(230, 230);
-  ValuesCanvas.fillSprite(TFT_BLUE);
+  ValuesCanvas.fillSprite(TFT_BLACK);
   ValuesCanvas.println("VALUES\n\r");
   ValuesCanvas.println(OutputSting);
   ValuesCanvas.pushSprite(0, 0);
@@ -530,14 +529,37 @@ void CategoriesDisplay()
   OutputSting = "Temperature: " + String(tmp) + "\r\nActive: " + String(hum) + "\r\nPressure: " + String(pressure);
 
   CategoriesCanvas.createSprite(230, 230);
-  CategoriesCanvas.fillSprite(TFT_BLUE);
+  CategoriesCanvas.fillSprite(TFT_BLACK);
   CategoriesCanvas.println("CATEGORIES\n\r");
   CategoriesCanvas.println(OutputSting);
   CategoriesCanvas.pushSprite(0, 0);
 }
 
+void OutputAtDisplay()
+{
+  M5Canvas OutputStream;
+
+  String OutputSting;
+
+  OutputSting = "ddp: ";
+
+  OutputStream.createSprite(30, 30);
+  OutputStream.fillSprite(TFT_BLACK);
+  OutputStream.println("MAINS\n\r");
+  OutputStream.println(OutputSting);
+  OutputStream.pushSprite(120, 0);
+}
+
 void test2_Screen_SM()
 {
+  static int forgrundDisplay = 0;
+  static int oldSeconds = 0;
+
+  if(oldSeconds == seconds)
+  {
+    return;
+  }
+  oldSeconds = seconds;
   switch (forgrundDisplay)
   {
     case 0:
@@ -547,7 +569,7 @@ void test2_Screen_SM()
       ValuesDisplay();  // Display Values
       break;
     case 2:
-      CategoriesDisplay(); // Display Kategorie
+      OutputAtDisplay(); // Display Kategorie
       break;
     default:
       forgrundDisplay = 0;
@@ -583,6 +605,14 @@ void test4_Post_SM(String topic)
   String JSON_End = "}";
   String JSON1;
 
+  static int oldSeconds = 0;
+
+  if(oldSeconds == seconds)
+  {
+    return;
+  }
+  oldSeconds = seconds;
+
   // String JOSN
   JSON1 = JSON_Header + tmp + JSON_Second_Part + hum + JSON_Third_Part + pressure + JSON_End;
   int JSON_length = JSON1.length();
@@ -610,21 +640,16 @@ void loop()
 {
   // put your main code here, to run repeatedly:
   tickerInit();
-
-  
-  
-  
   ////////test1();  // Settings Calcultaion
 
-  //init_modem();
-  //init_mqqt("thingsboard.cloud","1883");
+  init_modem();
+  init_mqqt("thingsboard.cloud","1883");
   while(1)
   {
     test2_Screen_SM();
-    continue;
-
     test3_takeMeteo_SM();
-  
+    //test4_Post_SM("v1/devices/me/telemetry");
+    test3_takeMeteo_SM();  
     //general_information();
     //ping("www.google.com");
     //post_mqqt("v1/devices/me/telemetry");
