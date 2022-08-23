@@ -448,7 +448,7 @@ void psm_settings()
 
 void edrx_settings()
 {
-    send_at_command("AT+CPSMS=1,,,\"01011111\",\"00000001\"\r\n", "OK", 1000); // Set PSM Values
+    send_at_command("AT+CEDRXS=1,,,\"01011111\",\"00000001\"\r\n", "OK", 1000); // Set PSM Values
     send_at_command("AT+CPSMS?\r\n", "OK", 1000); // Read PSM Values
 }
 
