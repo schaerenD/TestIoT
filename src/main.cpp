@@ -98,6 +98,9 @@ void calc_TAU_Activetime_eDRX()
   // Calc Activetime
   eDRX_Time_int = TimeBaseSeconds*eDRX_Time_int;
   eDRX_Time_String = String(eDRX_Time_int);
+
+  uint8_t eDRX_Hyperframetime = 0;
+  uint8_t eDRX_Pageingtime = 0;
 }
 
 void setup_canvas()
