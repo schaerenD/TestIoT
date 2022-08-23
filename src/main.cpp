@@ -509,7 +509,6 @@ void ValuesDisplay()
   ValuesCanvas.println("VALUES\n\r");
   ValuesCanvas.println(OutputSting);
   ValuesCanvas.pushSprite(0, 0);
-
 }
 
 void CategoriesDisplay()
