@@ -15,7 +15,7 @@ float hum      = 0.0;
 float pressure = 0.0;
 
 // PSM Values
-int TAU_T3412_Unit = 2; // T3412 
+int TAU_T3412_Unit = 1; // T3412 
 int TAU_T3412_Value = 1;
 const uint32_t TAU_Unit_Values_seconds[7] = {600, 3600, 36000, 2, 30, 60, 1152000};
 
@@ -52,8 +52,6 @@ const int MQTT_Broker_Keeptime = 60;
 const int CLIENTID = 60;
 const String MQTT_Subtopic = "sub_topic";
 
-
-
 M5GFX display;
 M5Canvas canvas(&display);
 M5Canvas sub_canvas1(&display);
@@ -78,12 +76,12 @@ void log(String str)
 {
     Serial.print(str);
     canvas.print(str);
-    canvas.pushSprite(0, 0);
+    canvas.pushSprite(0, 120);
 }
 
 void calc_TAU_Activetime_eDRX()
 {
-  int TimeBaseSeconds;
+  uint32_t TimeBaseSeconds;
 
   // Calc TAU
   TimeBaseSeconds = TAU_Unit_Values_seconds[TAU_T3412_Unit];
@@ -101,7 +99,6 @@ void calc_TAU_Activetime_eDRX()
   TimeBaseSeconds = eDRX_Unit_Values_seconds[eDRX_Unit];
   eDRX_Time_int = TimeBaseSeconds*eDRX_Time_int;
   eDRX_Time_String = String(eDRX_Time_int);
-
 }
 
 void setup_canvas()
@@ -345,8 +342,6 @@ void read_cedrxrdp_readcommand()
     String answer_edrx_requested_eDRX_value_String = String(answer_edrx_requested_eDRX_value, BIN);
     String answer_edrx_nw_provided_eDRX_value_String = String(answer_edrx_nw_provided_eDRX_value, BIN);
     String answer_edrx_paging_time_window_String = String(answer_edrx_paging_time_window, BIN);
-
-
   }
 }
 
@@ -430,8 +425,6 @@ void read_cpsms_readcommand()
     log(fourthParameter);
     log("\n\r Fifth Parameter:");
     log(fifthParameter);
-
-
   }
 }
 
@@ -453,7 +446,8 @@ void psm_settings()
 
 void edrx_settings()
 {
-  
+    send_at_command("AT+CPSMS=1,,,\"01011111\",\"00000001\"\r\n", "OK", 1000); // Set PSM Values
+    send_at_command("AT+CPSMS?\r\n", "OK", 1000); // Read PSM Values
 }
 
 void setup() 
@@ -484,12 +478,9 @@ void test0()
   }
 }
 
-void test1()
+void test1_calculation_for_Opertional()
 {
-  while(1)
-  {
-    calc_TAU_Activetime_eDRX();
-  }
+  calc_TAU_Activetime_eDRX();
 }
 
 void MeteoDisplay()
@@ -499,7 +490,7 @@ void MeteoDisplay()
 
   OutputSting = "Temperature: " + String(tmp) + "°C\r\nHumidity: " + String(hum) + "%\r\nPressure: " + String(seconds) + "Pa";
 
-  MeteoCanvas.createSprite(230, 230);
+  MeteoCanvas.createSprite(230, 120);
   MeteoCanvas.fillSprite(TFT_BLACK);
   MeteoCanvas.println("METEO\n\r");
   MeteoCanvas.println(OutputSting);
@@ -511,9 +502,9 @@ void ValuesDisplay()
   M5Canvas ValuesCanvas(&display);
   String OutputSting;
 
-  OutputSting = "Temperature: " + String(tmp) + "\r\nActive: " + String(hum) + "\r\nPressure: " + String(pressure);
+  OutputSting = "TAU: " + String(TAU_T3412_Time_String) + "Activtime: " + String(Activetime_T3324_Time_String) + "\r\eDRX: " + String(eDRX_Time_String);
 
-  ValuesCanvas.createSprite(230, 230);
+  ValuesCanvas.createSprite(230, 120);
   ValuesCanvas.fillSprite(TFT_BLACK);
   ValuesCanvas.println("VALUES\n\r");
   ValuesCanvas.println(OutputSting);
@@ -528,7 +519,7 @@ void CategoriesDisplay()
 
   OutputSting = "Temperature: " + String(tmp) + "\r\nActive: " + String(hum) + "\r\nPressure: " + String(pressure);
 
-  CategoriesCanvas.createSprite(230, 230);
+  CategoriesCanvas.createSprite(230, 120);
   CategoriesCanvas.fillSprite(TFT_BLACK);
   CategoriesCanvas.println("CATEGORIES\n\r");
   CategoriesCanvas.println(OutputSting);
@@ -569,7 +560,7 @@ void test2_Screen_SM()
       ValuesDisplay();  // Display Values
       break;
     case 2:
-      OutputAtDisplay(); // Display Kategorie
+      CategoriesDisplay(); // Display Kategorie
       break;
     default:
       forgrundDisplay = 0;
@@ -631,42 +622,17 @@ void test4_Post_SM(String topic)
   log(readstr);
 }
 
-void test5_take_Info()
-{
-  // read Command;
-}
-
 void loop() 
 {
   // put your main code here, to run repeatedly:
   tickerInit();
-  ////////test1();  // Settings Calcultaion
-
+  test1_calculation_for_Opertional();  // Settings Calcultaion
   init_modem();
   init_mqqt("thingsboard.cloud","1883");
   while(1)
   {
     test2_Screen_SM();
     test3_takeMeteo_SM();
-    //test4_Post_SM("v1/devices/me/telemetry");
-    test3_takeMeteo_SM();  
-    //general_information();
-    //ping("www.google.com");
-    //post_mqqt("v1/devices/me/telemetry");
-
-    //power_save_settings();
-    send_at_command("AT+CEDRXRDP\r\n", "OK", 1000);
-    read_cedrxrdp_readcommand();
-    delay(3000);
-
-    send_at_command("AT+CPSMRDP\r\n", "OK", 1000);
-    read_cpsmrdp_readcommand();
-    delay(3000);
-
-    //power_save_settings();
-    //send_at_command("AT+CSQ\r\n", "OK", 1000); // eDRX Values
-    //read_csq_readcommand();
-
-    //post_mqtt_temp("v1/devices/me/telemetry");
+    test4_Post_SM("v1/devices/me/telemetry");
   }
 }
