@@ -19,29 +19,28 @@ int TAU_T3412_Unit = 1; // T3412
 int TAU_T3412_Value = 1;
 const uint32_t TAU_Unit_Values_seconds[7] = {600, 3600, 36000, 2, 30, 60, 1152000};
 
-int Activetime_T3324_Unit = 2; // T3324  
+int Activetime_T3324_Unit = 1; // T3324  
 int Activetime_T3324_Value = 1;
-const uint32_t Activetime_Unit_Values_seconds[7] = {2, 60, 360};
+const uint32_t Activetime_Unit_Values_seconds[3] = {2, 60, 360};
 
 uint8_t seconds = 0;
 
 // eDRX Values
-int eDRX_Unit = 2;  // 
 int eDRX_Value = 1;
-const uint32_t eDRX_Unit_Values_seconds[7] = {600, 3600, 36000, 2, 30, 60, 1152000};
+int Paginig_Window = 0;
 
-int TAU_T3412_Time_int = 0; 
+uint32_t TAU_T3412_Time_int = 0; 
 String TAU_T3412_Time_String = "";
 String TAU_T3412_Time_Command_String = "";
 
-int Activetime_T3324_Time_int = 0; 
+uint32_t Activetime_T3324_Time_int = 0; 
 String Activetime_T3324_Time_String = "";
-int Activetime_T3324_Time_Command_int; // Set Base
 String Activetime_T3324_Time_Command_String = "";
 
-int eDRX_Time_int = 0; 
+const float eDRX_Hyperframetime = 10.24;
+const float eDRX_Pageingtime = 2.56;
+uint32_t eDRX_Time_int = 0; 
 String eDRX_Time_String = "";
-int eDRX_Time_Command_int = 0;
 String eDRX_Time_Command_String = ""; 
 
 /****************************************************************************************/
@@ -90,13 +89,13 @@ void calc_TAU_Activetime_eDRX()
 
   // Calc Activetime
   TimeBaseSeconds = Activetime_Unit_Values_seconds[Activetime_T3324_Unit];
-  Activetime_T3324_Time_int = TimeBaseSeconds*Activetime_T3324_Time_int;
+  Activetime_T3324_Time_int = TimeBaseSeconds*Activetime_T3324_Value;
   Activetime_T3324_Time_String = String(Activetime_T3324_Time_int);
-  Activetime_T3324_Time_Command_int = (0b11100000 & (Activetime_T3324_Unit<<5));  // Set Unit
+
+  uint8_t Activetime_T3324_Time_Command_int = (0b11100000 & (Activetime_T3324_Unit<<5));  // Set Unit
   Activetime_T3324_Time_Command_int = Activetime_T3324_Time_Command_int | (0b00011111 & Activetime_T3324_Value);  // Set Value
 
   // Calc Activetime
-  TimeBaseSeconds = eDRX_Unit_Values_seconds[eDRX_Unit];
   eDRX_Time_int = TimeBaseSeconds*eDRX_Time_int;
   eDRX_Time_String = String(eDRX_Time_int);
 }
@@ -474,7 +473,7 @@ void test0()
 {
   while(1)
   {
-    continue;
+
   }
 }
 
@@ -523,21 +522,6 @@ void CategoriesDisplay()
   CategoriesCanvas.println("CATEGORIES\n\r");
   CategoriesCanvas.println(OutputSting);
   CategoriesCanvas.pushSprite(0, 0);
-}
-
-void OutputAtDisplay()
-{
-  M5Canvas OutputStream;
-
-  String OutputSting;
-
-  OutputSting = "ddp: ";
-
-  OutputStream.createSprite(30, 30);
-  OutputStream.fillSprite(TFT_BLACK);
-  OutputStream.println("MAINS\n\r");
-  OutputStream.println(OutputSting);
-  OutputStream.pushSprite(120, 0);
 }
 
 void test2_Screen_SM()
