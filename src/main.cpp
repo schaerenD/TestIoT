@@ -32,10 +32,12 @@ int Paginig_Window = 0;
 uint32_t TAU_T3412_Time_int = 0; 
 String TAU_T3412_Time_String = "";
 String TAU_T3412_Time_Command_String = "";
+uint8_t TAU_T3412_Time_Command_int;
 
 uint32_t Activetime_T3324_Time_int = 0; 
 String Activetime_T3324_Time_String = "";
 String Activetime_T3324_Time_Command_String = "";
+uint8_t Activetime_T3324_Time_Command_int;
 
 const float eDRX_Hyperframetime = 10.24;
 const float eDRX_Pageingtime = 2.56;
@@ -87,13 +89,16 @@ void calc_TAU_Activetime_eDRX()
   TAU_T3412_Time_int = TimeBaseSeconds*TAU_T3412_Value;
   TAU_T3412_Time_String = String(TAU_T3412_Time_int);
 
+  TAU_T3412_Time_Command_int = (0b11100000 & (TAU_T3412_Unit<<5));  // Set Unit
+  TAU_T3412_Time_Command_int = TAU_T3412_Time_Command_int | (0b00011111 & TAU_T3412_Value);  // Set Value
+
   // Calc Activetime
   TimeBaseSeconds = Activetime_Unit_Values_seconds[Activetime_T3324_Unit];
   Activetime_T3324_Time_int = TimeBaseSeconds*Activetime_T3324_Value;
   Activetime_T3324_Time_String = String(Activetime_T3324_Time_int);
 
-  uint8_t Activetime_T3324_Time_Command_int = (0b11100000 & (Activetime_T3324_Unit<<5));  // Set Unit
-  Activetime_T3324_Time_Command_int = Activetime_T3324_Time_Command_int | (0b00011111 & Activetime_T3324_Value);  // Set Value
+  Activetime_T3324_Time_Command_int = (0b11000000 & (Activetime_T3324_Unit<<6));  // Set Unit
+  Activetime_T3324_Time_Command_int = Activetime_T3324_Time_Command_int | (0b00111111 & Activetime_T3324_Value);  // Set Value
 
   // Calc Activetime
   eDRX_Time_int = TimeBaseSeconds*eDRX_Time_int;
@@ -442,14 +447,22 @@ void DEB_power_save_settings()
 
 void psm_settings()
 {
+    char T3412_Value_8Bit[9];
+    char T3324_Value_8Bit[9];
+    sprintf (T3324_Value_8Bit, "%08d", Activetime_T3324_Time_Command_int);
+    sprintf (T3412_Value_8Bit, "%08d", TAU_T3412_Time_Command_int);
+    String T3324_Value_8Bit_String = String(T3324_Value_8Bit);
+    String T3412_Value_8Bit_String = String(T3412_Value_8Bit);
+
     send_at_command("AT+CPSMS=1,,,\"01011111\",\"00000001\"\r\n", "OK", 1000); // Set PSM Values
     send_at_command("AT+CPSMS?\r\n", "OK", 1000); // Read PSM Values
 }
 
 void edrx_settings()
 {
-    send_at_command("AT+CEDRXS=1,,,\"01011111\",\"00000001\"\r\n", "OK", 1000); // Set PSM Values
-    send_at_command("AT+CEDRX=2,1,3,2\r\n", "OK", 1000); // Read PSM Values
+    send_at_command("AT+CEDRXS=1,5,\"0010\"\r\n", "OK", 1000); // Set Cycle Length
+    send_at_command("AT+CEDRX=2,1,3,2\r\n", "OK", 1000); // Read PTW (Pageingtimewindow Values
+
 }
 
 void setup() 
