@@ -2,6 +2,7 @@
 #include <M5Stack.h>
 #include "M5_ENV.h"
 #include "M5GFX.h"
+#include "M5_ADS1115.h"
 #include "M5_SIM7080G.h"
 #include "Ticker.h"
 
@@ -60,6 +61,8 @@ M5Canvas sub_canvas2(&display);
 M5Canvas sub_canvas_text(&display);
 
 M5_SIM7080G device;
+
+ADS1115 Ammeter(AMETER, AMETER_ADDR, AMETER_EEPROM_ADDR);
 
 String readstr;
 
@@ -164,6 +167,51 @@ void send_at_command(const String atcommand, const String answer, int waittime)
       break;              // Sucess
     }
   }
+}
+
+void amperemetertest()
+{ 
+  float page512_volt = 2000.0F;
+  int16_t hope = 0.0;
+
+  Ammeter.setMode(SINGLESHOT);
+  Ammeter.setRate(RATE_8);
+  Ammeter.setGain(PAG_512);
+
+  hope = page512_volt / Ammeter.resolution;
+  float current = Ammeter.getValue();
+  String ddd = String(current);
+
+  log(ddd);
+  log("TETETETTETETT\n\r");
+  log(ddd);
+  log("TETETETTETETT\n\r");
+  log(ddd);
+  log("TETETETTETETT\n\r");
+  log(ddd);
+  log("TETETETTETETT\n\r");
+  log(ddd);
+  log("TETETETTETETT\n\r");
+  log(ddd);
+  log("TETETETTETETT\n\r");
+  log(ddd);
+  log("TETETETTETETT\n\r");  
+  log(ddd);
+  log("TETETETTETETT\n\r");
+  log(ddd);
+  log("TETETETTETETT\n\r");
+  log(ddd);
+  log("TETETETTETETT\n\r");
+  log(ddd);
+  log("TETETETTETETT\n\r");
+  log(ddd);
+  log("TETETETTETETT\n\r");
+  log(ddd);
+  log("TETETETTETETT\n\r");
+  log(ddd);
+  log("TETETETTETETT\n\r");
+
+
 }
 
 void init_modem()
@@ -454,6 +502,8 @@ void psm_settings()
     String T3324_Value_8Bit_String = String(T3324_Value_8Bit);
     String T3412_Value_8Bit_String = String(T3412_Value_8Bit);
 
+    String TestStringTxxxx = "AT+CPSMS=1,,,\"" + T3412_Value_8Bit_String + "\",\"" + T3324_Value_8Bit_String + "\"\r\n";
+
     send_at_command("AT+CPSMS=1,,,\"01011111\",\"00000001\"\r\n", "OK", 1000); // Set PSM Values
     send_at_command("AT+CPSMS?\r\n", "OK", 1000); // Read PSM Values
 }
@@ -463,26 +513,6 @@ void edrx_settings()
     send_at_command("AT+CEDRXS=1,5,\"0010\"\r\n", "OK", 1000); // Set Cycle Length
     send_at_command("AT+CEDRX=2,1,3,2\r\n", "OK", 1000); // Read PTW (Pageingtimewindow Values
 
-}
-
-void setup() 
-{
-  // put your setup code here, to run once:
-
-  M5.begin(); //Init M5Core. Initialize M5Core
-  display.begin();
-
-  canvas.setColorDepth(1); // mono color
-  canvas.createSprite(display.width(), display.height());
-  canvas.setTextSize((float)canvas.width() / 160);
-  canvas.setTextScroll(true);
-
-  device.Init(&Serial2, 16, 17);
-
-  M5.Power.begin(); //Init Power module. Initialize the power module
-
-  Wire.begin();
-  qmp6988.init();
 }
 
 void test0()
@@ -619,6 +649,28 @@ void test4_Post_SM(String topic)
   device.sendMsg(JSON1);
   readstr = device.waitMsg(5000);
   log(readstr);
+}
+
+void setup() 
+{
+  // put your setup code here, to run once:
+  M5.begin(); //Init M5Core. Initialize M5Core
+  display.begin();
+
+  canvas.setColorDepth(1); // mono color
+  canvas.createSprite(display.width(), display.height());
+  canvas.setTextSize((float)canvas.width() / 160);
+  canvas.setTextScroll(true);
+
+  device.Init(&Serial2, 16, 17);
+
+  M5.Power.begin(); //Init Power module. Initialize the power module
+
+  Wire.begin();
+  qmp6988.init();
+
+  amperemetertest();
+  delay(10000);
 }
 
 void loop() 
