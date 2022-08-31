@@ -10,6 +10,7 @@ SHT3X sht30;
 QMP6988 qmp6988;
 
 Ticker standartTimer;
+Ticker currentTimer;
 
 float tmp      = 0.0;
 float hum      = 0.0;
@@ -63,24 +64,34 @@ M5Canvas sub_canvas_text(&display);
 M5_SIM7080G device;
 
 ADS1115 Ammeter(AMETER, AMETER_ADDR, AMETER_EEPROM_ADDR);
+float adcValue;
+float adcValueRingbuffer[16];
 
 String readstr;
 
-void ticker_callback()
+void ticker_standart_callback()
 {
   seconds++;
 }
 
+void ticker_current_callback()
+{
+  static uint8_t i;
+  adcValue = Ammeter.getValue();
+  adcValueRingbuffer[i++] = adcValue;816
+}
+
 void tickerInit()
 {
-  standartTimer.attach_ms(1000,ticker_callback);
+  standartTimer.attach_ms(1000,ticker_standart_callback);
+  currentTimer.attach_ms(50,ticker_current_callback);
 }
 
 void log(String str) 
 {
-    Serial.print(str);
-    canvas.print(str);
-    canvas.pushSprite(0, 120);
+  Serial.print(str);
+  canvas.print(str);
+  canvas.pushSprite(0, 120);
 }
 
 void calc_TAU_Activetime_eDRX()
@@ -174,44 +185,31 @@ void amperemetertest()
   float page512_volt = 2000.0F;
   int16_t hope = 0.0;
 
-  Ammeter.setMode(SINGLESHOT);
+  Ammeter.setMode(CONTINUOUS);
+  Ammeter.setRate(RATE_8);
+  Ammeter.setGain(PAG_512);
+}
+
+void amperevalue()
+{
+  float current = Ammeter.getValue();
+
+  Ammeter.setMode(CONTINUOUS);
   Ammeter.setRate(RATE_8);
   Ammeter.setGain(PAG_512);
 
-  hope = page512_volt / Ammeter.resolution;
-  float current = Ammeter.getValue();
+  log("--------------");
   String ddd = String(current);
 
   log(ddd);
-  log("TETETETTETETT\n\r");
-  log(ddd);
-  log("TETETETTETETT\n\r");
-  log(ddd);
-  log("TETETETTETETT\n\r");
-  log(ddd);
-  log("TETETETTETETT\n\r");
-  log(ddd);
-  log("TETETETTETETT\n\r");
-  log(ddd);
-  log("TETETETTETETT\n\r");
-  log(ddd);
-  log("TETETETTETETT\n\r");  
-  log(ddd);
-  log("TETETETTETETT\n\r");
-  log(ddd);
-  log("TETETETTETETT\n\r");
-  log(ddd);
-  log("TETETETTETETT\n\r");
-  log(ddd);
-  log("TETETETTETETT\n\r");
-  log(ddd);
-  log("TETETETTETETT\n\r");
-  log(ddd);
-  log("TETETETTETETT\n\r");
-  log(ddd);
-  log("TETETETTETETT\n\r");
+  log("\n\r");
+}
 
+void ampereGetInterrupt()
+{
+  noInterrupts();
 
+  interrupts();
 }
 
 void init_modem()
@@ -510,9 +508,11 @@ void psm_settings()
 
 void edrx_settings()
 {
+    char eDRX_Cylcel[9];
+    char acessTechnologie; //Todo:  set 4 for LTE CAT M1
+
     send_at_command("AT+CEDRXS=1,5,\"0010\"\r\n", "OK", 1000); // Set Cycle Length
     send_at_command("AT+CEDRX=2,1,3,2\r\n", "OK", 1000); // Read PTW (Pageingtimewindow Values
-
 }
 
 void test0()
@@ -651,6 +651,11 @@ void test4_Post_SM(String topic)
   log(readstr);
 }
 
+void test5_takeCurrent_SM()
+{
+  amperevalue();
+}
+
 void setup() 
 {
   // put your setup code here, to run once:
@@ -670,7 +675,14 @@ void setup()
   qmp6988.init();
 
   amperemetertest();
-  delay(10000);
+  tickerInit();
+  while (1)
+  {
+    log(String(adcValue));
+    log(String("\r\n"));
+    //amperevalue();
+    delay(10);
+  }
 }
 
 void loop() 
@@ -684,6 +696,7 @@ void loop()
   {
     test2_Screen_SM();
     test3_takeMeteo_SM();
+    test5_takeCurrent_SM();
     test4_Post_SM("v1/devices/me/telemetry");
   }
 }
