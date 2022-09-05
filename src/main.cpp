@@ -6,6 +6,11 @@
 #include "M5_SIM7080G.h"
 #include "Ticker.h"
 
+#include "SX_mqtt.h"
+#include "SX_display.h"
+#include "SX_energy.h"
+#include "SX_sensors.h"
+
 SHT3X sht30;
 QMP6988 qmp6988;
 
@@ -78,7 +83,7 @@ void ticker_current_callback()
 {
   static uint8_t i;
   adcValue = Ammeter.getValue();
-  adcValueRingbuffer[i++] = adcValue;816
+  adcValueRingbuffer[i++] = adcValue;
 }
 
 void tickerInit()
