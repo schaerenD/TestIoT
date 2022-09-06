@@ -1,0 +1,55 @@
+void post_mqtt_temp(const String topic)
+{
+  String JSON_Header = "{\"temperature\": ";
+  String JSON_Second_Part = ",\r\n \"humidity\": ";
+  String JSON_Third_Part = ",\r\n \"pressure\": ";
+  String JSON_End = "}";
+  String JSON1;
+  String JSON2;
+
+  pressure = qmp6988.calcPressure();
+  if (sht30.get() == 0)   // Obtain the data of shT30.
+  {
+    tmp = sht30.cTemp;    // Store the temperature obtained from shT30.
+    hum = sht30.humidity; // Store the humidity obtained from the SHT30.
+  }
+  else 
+  {
+    tmp = 0;
+    hum = 0;
+  }
+
+  // String JOSN
+  JSON1 = JSON_Header + tmp + JSON_Second_Part + hum + JSON_Third_Part + pressure + JSON_End;
+  int JSON_length = JSON1.length();
+
+  String JSON_length_String = "";
+  JSON_length_String.concat(JSON_length);
+
+  send_at_command("AT+SMSTATE?\r\n", "OK", 1000);
+  
+  //device.sendMsg("AT+SMPUB=\"v1/devices/me/telemetry\",5,1,1\r\n");
+  String Conf = "AT+SMPUB=\"" + topic + "\"," + JSON_length_String + ",0,0\r\n";
+  device.sendMsg(Conf);
+  delay(500);
+  device.sendMsg(JSON1);
+  readstr = device.waitMsg(5000);
+  log(readstr);
+}
+
+void DEB_power_save_settings()
+{
+  send_at_command("AT+CPSMS?\r\n", "OK", 1000); // Read PSM Values
+  read_cpsms_readcommand();
+  send_at_command("AT+CPSMRDP\r\n", "OK", 1000); // eDRX Values Read
+  read_cpsms_readcommand();
+  send_at_command("AT+CEDRXRDP\r\n", "OK", 1000); // eDRX Values
+  read_cedrxrdp_readcommand();
+}
+
+void ampereGetInterrupt()
+{
+  noInterrupts();
+
+  interrupts();
+}
