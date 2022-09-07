@@ -1,1 +1,1 @@
-void tickerInit(void);
+void ticker_init(void);

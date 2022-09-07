@@ -14,32 +14,21 @@ void setup()
   // put your setup code here, to run once:
   M5.begin(); //Init M5Core. Initialize M5Core
   M5.Power.begin(); //Init Power module. Initialize the power module
-  Wire.begin();
+  Wire.begin(); // Wire/I2C is used for Current and Temperature, Pressure and Humandity.
 
-  display_init();
+  // Swisscom Init Functions
+  ticker_init(); // Timer Ticker Interrupts
+  display_init(); // Init Display Functinality
+  energy_init(); // Energy Init
+  
 
-  //->>amperemetertest();
-  //->>tickerInit();
-  while (1)
-  {
-    //log(String(adcValue));
-    //log(String("\r\n"));
-    //delay(10);
-  }
+  // Read Parameter
+
+  // Others
+  
 }
 
 void loop() 
 {
-  // put your main code here, to run repeatedly:
-  tickerInit();
-  //->test1_calculation_for_Opertional();  // Settings Calcultaion
-  //->init_modem();
-  //->init_mqqt("thingsboard.cloud","1883");
-  while(1)
-  {
-    //->test2_Screen_SM();
-    //->test3_takeMeteo_SM();
-    //->test5_takeCurrent_SM();
-    //->test4_Post_SM("v1/devices/me/telemetry");
-  }
+
 }

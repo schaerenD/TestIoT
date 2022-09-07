@@ -141,3 +141,18 @@ void test2_Screen_SM()
     forgrundDisplay = 0;
   }    
 }
+
+/**
+Energy Statemachine
+
+Debug Output
+
+@param  This Function is only used to pull out Debug Strings to the Display
+@param  String to Output
+*/
+void display_debug_output(String outputstring)
+{
+  Serial.print(outputstring);
+  canvas.print(outputstring);
+  canvas.pushSprite(0, 0);
+}

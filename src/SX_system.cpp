@@ -11,7 +11,7 @@ void ticker_standart_callback()
   seconds++;
 }
 
-void tickerInit()
+void ticker_init()
 {
   standartTimer.attach_ms(1000,ticker_standart_callback);
   currentTimer.attach_ms(50,ticker_current_callback);
