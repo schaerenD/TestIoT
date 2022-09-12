@@ -52,14 +52,18 @@ void sdcard_init()
     display_debug_output("-----\r\n");
 
     display_debug_output(firstParameter);
-    display_debug_output("NEXT:");
+    display_debug_output("NEXT2:");
     display_debug_output(secondParameter);
-    display_debug_output("NEXT:");
+    display_debug_output("NEXT3:");
     display_debug_output(thirdParameter);
-    display_debug_output("NEXT:");
+    display_debug_output("NEXT4:");
     display_debug_output(fourthParameter);
-    display_debug_output("NEXT:");
+    display_debug_output("NEXT5:");
     display_debug_output(fifthParameter);
+    display_debug_output("NEXT6:");
+    display_debug_output(sixthParameter);
+    display_debug_output("NEXT7:");
+    display_debug_output(seventhParameter);
     display_debug_output("END");
 
     delay(10000);
