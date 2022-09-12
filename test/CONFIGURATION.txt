@@ -1,0 +1,6 @@
+Parameter_1_eDRX=1
+Parameter_2_PagingWindow=
+Parameter_3_T3324=00000001
+Parameter_4_T3412=01000111
+Parameter_5_APN=gprs.swisscom.ch
+END
