@@ -52,6 +52,22 @@ void sdcard_init()
     display_debug_output("-----\r\n");
 
     display_debug_output(firstParameter);
+
+    extern int eDRX_Value;
+    eDRX_Value = firstParameter.toInt();
+    extern int Pageinig_Window;
+    Pageinig_Window = secondParameter.toInt();
+    extern int TAU_T3324_Unit;
+    TAU_T3324_Unit = thirdParameter.toInt();
+    extern int TAU_T3324_Value;
+    TAU_T3324_Value = fourthParameter.toInt();
+    extern int TAU_T3324_Unit;
+    TAU_T3324_Value = fifthParameter.toInt();
+    extern int TAU_T3324_Value;
+    Activetime_T3324_Value = sixthParameter.toInt();
+    extern String apn_name;
+    apn_name = seventhParameter;
+
     display_debug_output("NEXT2:");
     display_debug_output(secondParameter);
     display_debug_output("NEXT3:");

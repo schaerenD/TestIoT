@@ -3,6 +3,8 @@
 #include "SX_display.h"
 #include <M5Stack.h>
 
+String apn_name;
+
 uint32_t TAU_T3412_Time_int = 0; 
 String TAU_T3412_Time_String = "";
 String TAU_T3412_Time_Command_String = "";
@@ -23,7 +25,7 @@ M5_SIM7080G device;
 
 // eDRX Values
 int eDRX_Value = 1;
-int Paginig_Window = 0;
+int Pageinig_Window = 0;
 
 // PSM Values
 int TAU_T3412_Unit = 1; // T3412 
