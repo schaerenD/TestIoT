@@ -1,0 +1,38 @@
+Also Dok Brain to Terminal
+
+ACHTUNG TERMIN NICHT VERGESSEN
+
+Overview:
+- Ordnerstruktur
+- 
+
+Hardware:
+- Bild von Hardware
+- Schon geschriebener Text
+
+- Modem  M5 Stack etc
+    - Verkabelung etc..0
+
+SoftwareEntwicklung
+
+Das IoT Refrence Kit
+
+- Install : VS Code, PlatfomrIO, 
+- Struktur der Software Entwicklung
+
+Konfiguration
+- eDRX, Pageing Window, Ich mag nicht in Word schreiben
+- 
+
+NAME: IoT Refrencekit
+
+Also Gedanken zu Ordnersturktur
+
+Der Sourcecode inkl. Anleitung liegt auf Git. Damit auf Änderung reagiert werden kann wird diese auch dort gepflegt.
+
+SCRENNSHOT ORDNERSTRUKTUR
+
+Im Ordner Dokumentation findet man die Worddatei zu dieser Dokumentation. Ausserdem sind hier Technische Dokumentation zu dem Modem. 
+Im Ornder src befindet sich der Source Code für das IoT Konfiguration
+Im Ordner lib befinden sich Libraries zu dem Source Code. Diese werden durch Platformio automatisch angelegt.
+
