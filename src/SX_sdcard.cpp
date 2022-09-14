@@ -16,13 +16,11 @@ void sdcard_init()
     File f = SD.open("/CONFIGURATION.txt", FILE_READ);
     if (f) {
         Test = f.readString();
-        display_debug_output(Test);
         f.close();
-        display_debug_output("DONE");
     }
     else
     {
-        display_debug_output("NOPE");
+        // ToDo: File not found
     }
 
     // Init SD Card
@@ -49,10 +47,6 @@ void sdcard_init()
     String sixthParameter = Test.substring(sixthParameterBegin+1, sixthParameterEnd);
     String seventhParameter = Test.substring(seventhParameterBegin+1, seventhParameterEnd);
 
-    display_debug_output("-----\r\n");
-
-    display_debug_output(firstParameter);
-
     extern int eDRX_Value;
     eDRX_Value = firstParameter.toInt();
     extern int Pageinig_Window;
@@ -67,20 +61,4 @@ void sdcard_init()
     Activetime_T3324_Value = sixthParameter.toInt();
     extern String apn_name;
     apn_name = seventhParameter;
-
-    display_debug_output("NEXT2:");
-    display_debug_output(secondParameter);
-    display_debug_output("NEXT3:");
-    display_debug_output(thirdParameter);
-    display_debug_output("NEXT4:");
-    display_debug_output(fourthParameter);
-    display_debug_output("NEXT5:");
-    display_debug_output(fifthParameter);
-    display_debug_output("NEXT6:");
-    display_debug_output(sixthParameter);
-    display_debug_output("NEXT7:");
-    display_debug_output(seventhParameter);
-    display_debug_output("END");
-
-    delay(10000);
 }
