@@ -11,9 +11,9 @@ Hardware:
 - Schon geschriebener Text
 
 - Modem  M5 Stack etc
-    - Verkabelung etc..0
+    - Verkabelung etc
+    - 
 
-SoftwareEntwicklung
 
 Das IoT Refrence Kit
 
@@ -28,11 +28,14 @@ NAME: IoT Refrencekit
 
 Also Gedanken zu Ordnersturktur
 
-Der Sourcecode inkl. Anleitung liegt auf Git. Damit auf Änderung reagiert werden kann wird diese auch dort gepflegt.
-
 SCRENNSHOT ORDNERSTRUKTUR
 
 Im Ordner Dokumentation findet man die Worddatei zu dieser Dokumentation. Ausserdem sind hier Technische Dokumentation zu dem Modem. 
 Im Ornder src befindet sich der Source Code für das IoT Konfiguration
 Im Ordner lib befinden sich Libraries zu dem Source Code. Diese werden durch Platformio automatisch angelegt.
 
+
+
+SCRENNSHOT PLATFORMIO
+
+Mail senden???????
