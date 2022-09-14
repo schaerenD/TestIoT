@@ -18,11 +18,10 @@ void setup()
 
   // Swisscom Init Functions
   ticker_init(); // Timer Ticker Interrupts
-
   display_init(); // Init Display Functinality
   sdcard_init();
   energy_init(); // Energy Init
-  
+  modem_init();
 
   // Read Parameter
 

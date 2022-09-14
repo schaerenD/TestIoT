@@ -36,7 +36,6 @@ int Activetime_T3324_Unit = 1; // T3324
 int Activetime_T3324_Value = 1;
 const uint32_t Activetime_Unit_Values_seconds[3] = {2, 60, 360};
 
-
 String readstr;
 
 void calc_TAU_Activetime_eDRX()
@@ -74,9 +73,6 @@ void send_at_command(const String atcommand, const String answer, int waittime)
   {
     device.sendMsg(atcommand);       // We Add some AT Commands to give the Modem the Chance to Synchronize with UART
     readstr = device.waitMsg(waittime);
-    //log("COMMAND: ");
-    //log(atcommand);
-    //log("ANSWER: ");
     log(readstr); // Printout Answer
     if (answer.indexOf("NO ANWSER CHECK EXPECTET") == 0)
     {
@@ -97,7 +93,7 @@ void send_at_command(const String atcommand, const String answer, int waittime)
   }
 }
 
-void init_modem()
+void connect_modem()
 {
   send_at_command("AT\r\n", "OK", 1000);// We Add some AT Commands to give the Modem the Chance to Synchronize with UART
   send_at_command("AT+CREBOOT\r\n", "OK", 1000);// Reboot the Modul
@@ -293,7 +289,6 @@ void general_information()
 {
   log("--------------------\r\n");
   send_at_command("AT+CSQ\r\n", "OK", 1000);
-  //read_csq_readcommand();
   send_at_command("AT+CGATT?\r\n", "OK", 1000);
   send_at_command("AT+COPS?\r\n", "OK", 1000);
   send_at_command("AT+CEREG?\r\n", "OK", 1000);
@@ -319,4 +314,5 @@ void test1_calculation_for_Opertional()
 void modem_init()
 {
   device.Init(&Serial2, 16, 17);
+  connect_modem();
 }
