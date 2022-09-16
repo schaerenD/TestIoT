@@ -8,12 +8,12 @@ String apn_name;
 uint32_t TAU_T3412_Time_int = 0; 
 String TAU_T3412_Time_String = "";
 String TAU_T3412_Time_Command_String = "";
-uint8_t TAU_T3412_Time_Command_int;
+uint16_t TAU_T3412_Time_Command_int;
 
 uint32_t Activetime_T3324_Time_int = 0; 
 String Activetime_T3324_Time_String = "";
 String Activetime_T3324_Time_Command_String = "";
-uint8_t Activetime_T3324_Time_Command_int;
+uint16_t Activetime_T3324_Time_Command_int;
 
 const float eDRX_Hyperframetime = 10.24;
 const float eDRX_Pageingtime = 2.56;
@@ -56,11 +56,14 @@ void calc_TAU_Activetime_eDRX()
   ////////display_debug_output("TimeBaseSeconds:");
   ////////display_debug_output(String(TimeBaseSeconds));
 ////////
-  display_debug_output("TAU_T3412_Time_int:");
-  display_debug_output(String(TAU_T3412_Time_int));
 
   TAU_T3412_Time_Command_int = (0b11100000 & (TAU_T3412_Unit<<5));  // Set Unit
   TAU_T3412_Time_Command_int = TAU_T3412_Time_Command_int | (0b00011111 & TAU_T3412_Value);  // Set Value
+
+  display_debug_output("TAU_T3412_Time_int:");
+  display_debug_output(String(TAU_T3412_Time_int));
+  display_debug_output("TAU_T3412_Time_Command_int:");
+  display_debug_output(String(TAU_T3412_Time_Command_int));
 
   // Calc Activetime
   TimeBaseSeconds = Activetime_Unit_Values_seconds[Activetime_T3324_Unit];
@@ -80,8 +83,10 @@ void calc_TAU_Activetime_eDRX()
   ///////display_debug_output(String(TimeBaseSeconds));
 ///////
   display_debug_output("----------------\r\n");
-  display_debug_output("Activetime_T3324_Time_Command_int:");
+  display_debug_output("Activetime_T3324_Time_String:");
   display_debug_output(Activetime_T3324_Time_String);
+  display_debug_output("Activetime_T3324_Time_Command_int:");
+  display_debug_output(String(Activetime_T3324_Time_Command_int));
 
   // Calc Activetime
   eDRX_Time_int = TimeBaseSeconds*eDRX_Time_int;
@@ -288,35 +293,50 @@ void read_cpsms_readcommand()
 
 void psm_settings()
 {
-    char T3412_Value_8Bit[9];
-    char T3324_Value_8Bit[9];
+    char T3412_Value_16Bit[17] = {0};
+    char T3324_Value_16Bit[17] = {0};
+    char T3412_Value_8Bit[9] = {0};
+    char T3324_Value_8Bit[9] = {0};
     sprintf (T3324_Value_8Bit, "%08d", Activetime_T3324_Time_Command_int);
     sprintf (T3412_Value_8Bit, "%08d", TAU_T3412_Time_Command_int);
     String T3324_Value_8Bit_String = String(T3324_Value_8Bit);
-    String T3412_Value_8Bit_String = String(T3412_Value_8Bit);
+    String T3412_Value_8Bit_String;
 
-    display_debug_output("----------------\r\n");
-    display_debug_output("T3324_Value_8Bit_String:");
-    display_debug_output(T3324_Value_8Bit_String);
-
-    display_debug_output("----------------\r\n");
-    display_debug_output("T3412_Value_8Bit_String:");
-    display_debug_output(T3412_Value_8Bit_String);
-
-    String TestStringTxxxx = "AT+CPSMS=1,,,\"" + T3412_Value_8Bit_String + "\",\"" + T3324_Value_8Bit_String + "\"\r\n";
+    // Change Times in Binary String Format with correspending Zeros to the Begin
+    TAU_T3412_Time_Command_int = TAU_T3412_Time_Command_int + 256;
+    itoa(TAU_T3412_Time_Command_int,T3412_Value_16Bit, 2);
     
-    display_debug_output("----------------\r\n");
-    display_debug_output("LAST:");
-    display_debug_output(TestStringTxxxx);
+    for(int d=0;d<8;d++)
+    {
+      T3412_Value_8Bit[d] = T3412_Value_16Bit[d + 1];
+    }
 
-    //send_at_command("AT+CPSMS=1,,,\"01011111\",\"00000001\"\r\n", "OK", 1000); // Set PSM Values
-    //send_at_command("AT+CPSMS?\r\n", "OK", 1000); // Read PSM Values
+    T3412_Value_8Bit_String = String(T3412_Value_8Bit);
+
+    Activetime_T3324_Time_Command_int = Activetime_T3324_Time_Command_int + 256;
+    itoa(Activetime_T3324_Time_Command_int,T3324_Value_16Bit, 2);
+    
+    for(int d=0;d<8;d++)
+    {
+      T3324_Value_8Bit[d] = T3324_Value_16Bit[d + 1];
+    }
+
+    T3324_Value_8Bit_String = String(T3324_Value_8Bit);
+
+    String OutputString = "AT+CPSMS=1,,,\"" + T3412_Value_8Bit_String + "\",\"" + T3324_Value_8Bit_String + "\"\r\n";
+
+    //Send Command;
+    send_at_command("AT+CSQ\r\n", "OK", 1000);
+
+
 }
 
 void edrx_settings()
 {
     char eDRX_Cylcel[9];
     char acessTechnologie; //Todo:  set 4 for LTE CAT M1
+
+    
 
     send_at_command("AT+CEDRXS=1,5,\"0010\"\r\n", "OK", 1000); // Set Cycle Length
     send_at_command("AT+CEDRX=2,1,3,2\r\n", "OK", 1000); // Read PTW (Pageingtimewindow Values
@@ -355,6 +375,7 @@ void modem_init()
 
   calc_TAU_Activetime_eDRX();
   psm_settings();
-  
-  //edrx_settings();
+  edrx_settings();
+
+
 }

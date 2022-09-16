@@ -113,3 +113,16 @@ void ampereGetInterrupt()
     display_debug_output(ninethParameter);
 
     ;;; ;;; ;;;
+
+    int counterEmpty = 0;
+    for(int d=0;d<8;d++)
+    {
+      if(T3324_Value_8Bit[0] == 0)
+      {
+        counterEmpty++;
+      }
+    }
+    
+    ;;; ;;; ;;;
+
+    
