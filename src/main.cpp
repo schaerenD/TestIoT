@@ -22,6 +22,8 @@ void setup()
   sdcard_init();
   energy_init(); // Energy Init
   modem_init();
+  while(1);
+  //mqtt_init();
 
   // Read Parameter
 

@@ -47,6 +47,18 @@ void calc_TAU_Activetime_eDRX()
   TAU_T3412_Time_int = TimeBaseSeconds*TAU_T3412_Value;
   TAU_T3412_Time_String = String(TAU_T3412_Time_int);
 
+  ////////display_debug_output("TAU_T3412_Unit:");
+  ////////display_debug_output(String(TAU_T3412_Unit));
+////////
+  ////////display_debug_output("TAU_T3412_Value:");
+  ////////display_debug_output(String(TAU_T3412_Value));
+////////
+  ////////display_debug_output("TimeBaseSeconds:");
+  ////////display_debug_output(String(TimeBaseSeconds));
+////////
+  display_debug_output("TAU_T3412_Time_int:");
+  display_debug_output(String(TAU_T3412_Time_int));
+
   TAU_T3412_Time_Command_int = (0b11100000 & (TAU_T3412_Unit<<5));  // Set Unit
   TAU_T3412_Time_Command_int = TAU_T3412_Time_Command_int | (0b00011111 & TAU_T3412_Value);  // Set Value
 
@@ -57,6 +69,19 @@ void calc_TAU_Activetime_eDRX()
 
   Activetime_T3324_Time_Command_int = (0b11000000 & (Activetime_T3324_Unit<<6));  // Set Unit
   Activetime_T3324_Time_Command_int = Activetime_T3324_Time_Command_int | (0b00111111 & Activetime_T3324_Value);  // Set Value
+
+  ///////display_debug_output("Activetime_T3324_Value:");
+  ///////display_debug_output(String(Activetime_T3324_Value));
+///////
+  ///////display_debug_output("Activetime_T3324_Unit:");
+  ///////display_debug_output(String(Activetime_T3324_Unit));
+///////
+  ///////display_debug_output("TimeBaseSeconds:");
+  ///////display_debug_output(String(TimeBaseSeconds));
+///////
+  display_debug_output("----------------\r\n");
+  display_debug_output("Activetime_T3324_Time_Command_int:");
+  display_debug_output(Activetime_T3324_Time_String);
 
   // Calc Activetime
   eDRX_Time_int = TimeBaseSeconds*eDRX_Time_int;
@@ -73,7 +98,7 @@ void send_at_command(const String atcommand, const String answer, int waittime)
   {
     device.sendMsg(atcommand);       // We Add some AT Commands to give the Modem the Chance to Synchronize with UART
     readstr = device.waitMsg(waittime);
-    log(readstr); // Printout Answer
+    display_debug_output(readstr); // Printout Answer
     if (answer.indexOf("NO ANWSER CHECK EXPECTET") == 0)
     {
       //log("NO ANWSER CHECK EXPECTET\r\n");
@@ -81,7 +106,7 @@ void send_at_command(const String atcommand, const String answer, int waittime)
     }
     else if(readstr.indexOf(answer) == -1) 
     {
-      log("ERROR\r\n");
+      display_debug_output("ERROR\r\n");
       error_counter++;    // Send Again
       continue;
     }
@@ -270,10 +295,22 @@ void psm_settings()
     String T3324_Value_8Bit_String = String(T3324_Value_8Bit);
     String T3412_Value_8Bit_String = String(T3412_Value_8Bit);
 
-    String TestStringTxxxx = "AT+CPSMS=1,,,\"" + T3412_Value_8Bit_String + "\",\"" + T3324_Value_8Bit_String + "\"\r\n";
+    display_debug_output("----------------\r\n");
+    display_debug_output("T3324_Value_8Bit_String:");
+    display_debug_output(T3324_Value_8Bit_String);
 
-    send_at_command("AT+CPSMS=1,,,\"01011111\",\"00000001\"\r\n", "OK", 1000); // Set PSM Values
-    send_at_command("AT+CPSMS?\r\n", "OK", 1000); // Read PSM Values
+    display_debug_output("----------------\r\n");
+    display_debug_output("T3412_Value_8Bit_String:");
+    display_debug_output(T3412_Value_8Bit_String);
+
+    String TestStringTxxxx = "AT+CPSMS=1,,,\"" + T3412_Value_8Bit_String + "\",\"" + T3324_Value_8Bit_String + "\"\r\n";
+    
+    display_debug_output("----------------\r\n");
+    display_debug_output("LAST:");
+    display_debug_output(TestStringTxxxx);
+
+    //send_at_command("AT+CPSMS=1,,,\"01011111\",\"00000001\"\r\n", "OK", 1000); // Set PSM Values
+    //send_at_command("AT+CPSMS?\r\n", "OK", 1000); // Read PSM Values
 }
 
 void edrx_settings()
@@ -314,5 +351,10 @@ void test1_calculation_for_Opertional()
 void modem_init()
 {
   device.Init(&Serial2, 16, 17);
-  connect_modem();
+  //connect_modem();
+
+  calc_TAU_Activetime_eDRX();
+  psm_settings();
+  
+  //edrx_settings();
 }

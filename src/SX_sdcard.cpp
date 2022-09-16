@@ -6,10 +6,9 @@
 void sdcard_init()
 {   
     String Test;
-    display_debug_output("FUNCCALL");
     if (!SD.begin()) 
     {
-        display_debug_output("ERROR");
+        display_debug_output("ERROR NO SD CARD");
         while (1);
     }
 
@@ -20,7 +19,7 @@ void sdcard_init()
     }
     else
     {
-        // ToDo: File not found
+        display_debug_output("ERROR NO FILE");// ToDo: File not found
     }
 
     // Init SD Card
@@ -38,6 +37,10 @@ void sdcard_init()
     int sixthParameterEnd = Test.indexOf('\r',sixthParameterBegin);    
     int seventhParameterBegin = Test.indexOf('=',sixthParameterEnd);
     int seventhParameterEnd = Test.indexOf('\r',seventhParameterBegin);
+    int eigthParameterBegin = Test.indexOf('=',seventhParameterEnd);
+    int eigthParameterEnd = Test.indexOf('\r',eigthParameterBegin);
+    int ninethParameterBegin = Test.indexOf('=',eigthParameterEnd);
+    int ninethParameterEnd = Test.indexOf('\r',ninethParameterBegin);
 
     String firstParameter = Test.substring(firstParameterBegin+1, firstParameterEnd);
     String secondParameter = Test.substring(secondParameterBegin+1, secondParameterEnd);
@@ -46,6 +49,8 @@ void sdcard_init()
     String fifthParameter = Test.substring(fifthParameterBegin+1, fifthParameterEnd);
     String sixthParameter = Test.substring(sixthParameterBegin+1, sixthParameterEnd);
     String seventhParameter = Test.substring(seventhParameterBegin+1, seventhParameterEnd);
+    String eigthParameter = Test.substring(eigthParameterBegin+1, eigthParameterEnd);
+    String ninethParameter = Test.substring(ninethParameterBegin+1, ninethParameterEnd);
 
     extern int eDRX_Value;
     eDRX_Value = firstParameter.toInt();

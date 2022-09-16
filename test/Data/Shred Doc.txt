@@ -39,3 +39,11 @@ Im Ordner lib befinden sich Libraries zu dem Source Code. Diese werden durch Pla
 SCRENNSHOT PLATFORMIO
 
 Mail senden???????
+
+
+
+
+
+
+-> TAU Und andere ATable iun die Doku von Powwer Point miot fdewr £Erklätung
+-> Achtung CLRF ist wichtig beim speichern

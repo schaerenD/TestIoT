@@ -1,8 +1,10 @@
 Parameter_1_eDRX=1
-Parameter_2_PageingWindow=01
-Parameter_3_T3324_Unit=000
-Parameter_5_T3324_Value=0111
-Parameter_6_T3412_Unit=01
-Parameter_7_T3412_Value=000111
-Parameter_8_APN=gprs.swisscom.ch
+Parameter_2_PageingWindow=1
+Parameter_3_TAU_T3412_Unit=2
+Parameter_4_TAU_T3412_Value=7
+Parameter_5_Activetime_T3324_Unit=0
+Parameter_6_Activetime_T3324_Value=5
+Parameter_7_APN=gprs.swisscom.ch
+Parameter_8_RAT=7
+Parameter_9_Mode=0
 END

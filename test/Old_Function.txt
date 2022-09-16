@@ -90,3 +90,26 @@ void ampereGetInterrupt()
 
   interrupts();
 }
+
+;;; ;;; ;;;
+
+    display_debug_output("firstParameter:");
+    display_debug_output(firstParameter);
+    display_debug_output("secondParameter:");
+    display_debug_output(secondParameter);
+    display_debug_output("thirdParameter:");
+    display_debug_output(thirdParameter);
+    display_debug_output("fourthParameter:");
+    display_debug_output(fourthParameter);
+    display_debug_output("fifthParameter:");
+    display_debug_output(fifthParameter);
+    display_debug_output("sixthParameter:");
+    display_debug_output(sixthParameter);
+    display_debug_output("seventhParameter:");
+    display_debug_output(seventhParameter);
+    display_debug_output("eigthParameter:");
+    display_debug_output(eigthParameter);
+    display_debug_output("ninethParameter:");
+    display_debug_output(ninethParameter);
+
+    ;;; ;;; ;;;
