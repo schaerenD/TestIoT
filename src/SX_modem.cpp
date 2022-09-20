@@ -17,6 +17,9 @@ uint16_t Activetime_T3324_Time_Command_int;
 
 const float eDRX_Hyperframetime = 10.24;
 const float eDRX_Pageingtime = 2.56;
+uint8_t eDRX_Value_int;
+String eDRX_Value_String = "";
+String eDRX_Value_Command_String = "";
 uint32_t eDRX_Time_int = 0; 
 String eDRX_Time_String = "";
 String eDRX_Time_Command_String = "";
@@ -24,7 +27,7 @@ String eDRX_Time_Command_String = "";
 M5_SIM7080G device;
 
 // eDRX Values
-int eDRX_Value = 1;
+int eDRX_Value = 0;
 int Pageinig_Window = 0;
 
 // PSM Values
@@ -47,23 +50,8 @@ void calc_TAU_Activetime_eDRX()
   TAU_T3412_Time_int = TimeBaseSeconds*TAU_T3412_Value;
   TAU_T3412_Time_String = String(TAU_T3412_Time_int);
 
-  ////////display_debug_output("TAU_T3412_Unit:");
-  ////////display_debug_output(String(TAU_T3412_Unit));
-////////
-  ////////display_debug_output("TAU_T3412_Value:");
-  ////////display_debug_output(String(TAU_T3412_Value));
-////////
-  ////////display_debug_output("TimeBaseSeconds:");
-  ////////display_debug_output(String(TimeBaseSeconds));
-////////
-
   TAU_T3412_Time_Command_int = (0b11100000 & (TAU_T3412_Unit<<5));  // Set Unit
   TAU_T3412_Time_Command_int = TAU_T3412_Time_Command_int | (0b00011111 & TAU_T3412_Value);  // Set Value
-
-  display_debug_output("TAU_T3412_Time_int:");
-  display_debug_output(String(TAU_T3412_Time_int));
-  display_debug_output("TAU_T3412_Time_Command_int:");
-  display_debug_output(String(TAU_T3412_Time_Command_int));
 
   // Calc Activetime
   TimeBaseSeconds = Activetime_Unit_Values_seconds[Activetime_T3324_Unit];
@@ -73,24 +61,17 @@ void calc_TAU_Activetime_eDRX()
   Activetime_T3324_Time_Command_int = (0b11000000 & (Activetime_T3324_Unit<<6));  // Set Unit
   Activetime_T3324_Time_Command_int = Activetime_T3324_Time_Command_int | (0b00111111 & Activetime_T3324_Value);  // Set Value
 
-  ///////display_debug_output("Activetime_T3324_Value:");
-  ///////display_debug_output(String(Activetime_T3324_Value));
-///////
-  ///////display_debug_output("Activetime_T3324_Unit:");
-  ///////display_debug_output(String(Activetime_T3324_Unit));
-///////
-  ///////display_debug_output("TimeBaseSeconds:");
-  ///////display_debug_output(String(TimeBaseSeconds));
-///////
-  display_debug_output("----------------\r\n");
-  display_debug_output("Activetime_T3324_Time_String:");
-  display_debug_output(Activetime_T3324_Time_String);
-  display_debug_output("Activetime_T3324_Time_Command_int:");
-  display_debug_output(String(Activetime_T3324_Time_Command_int));
-
   // Calc Activetime
-  eDRX_Time_int = TimeBaseSeconds*eDRX_Time_int;
-  eDRX_Time_String = String(eDRX_Time_int);
+  eDRX_Value_int = TimeBaseSeconds*eDRX_Value;
+  eDRX_Value_String = String(eDRX_Value_int);
+
+  display_debug_output("----------------\r\n");
+  display_debug_output("eDRX_Value:");
+  display_debug_output(String(eDRX_Value));
+
+  display_debug_output("----------------\r\n");
+  display_debug_output("eDRX_Value_int:");
+  display_debug_output(String(eDRX_Value_int));
 
   uint8_t eDRX_Hyperframetime = 0;
   uint8_t eDRX_Pageingtime = 0;
@@ -299,7 +280,7 @@ void psm_settings()
     char T3324_Value_8Bit[9] = {0};
     sprintf (T3324_Value_8Bit, "%08d", Activetime_T3324_Time_Command_int);
     sprintf (T3412_Value_8Bit, "%08d", TAU_T3412_Time_Command_int);
-    String T3324_Value_8Bit_String = String(T3324_Value_8Bit);
+    String T3324_Value_8Bit_String;
     String T3412_Value_8Bit_String;
 
     // Change Times in Binary String Format with correspending Zeros to the Begin
@@ -326,20 +307,48 @@ void psm_settings()
     String OutputString = "AT+CPSMS=1,,,\"" + T3412_Value_8Bit_String + "\",\"" + T3324_Value_8Bit_String + "\"\r\n";
 
     //Send Command;
-    send_at_command("AT+CSQ\r\n", "OK", 1000);
-
-
+    //send_at_command("AT+CSQ\r\n", "OK", 1000);
 }
 
 void edrx_settings()
 {
     char eDRX_Cylcel[9];
     char acessTechnologie; //Todo:  set 4 for LTE CAT M1
+    char eDRX_Value_8Bit[9] = {0};
+    char eDRX_Value_4Bit[5] = {0};
+    String eDRX_Value_4Bit_Command_String;
 
+    // Change Times in Binary String Format with correspending Zeros to the Begin
+    eDRX_Value_int = eDRX_Value_int + 16;
+
+    sprintf (eDRX_Value_4Bit, "%08d", eDRX_Value_int);
     
+    //
+    itoa(eDRX_Time_int, eDRX_Value_8Bit, 2);
+    for(int d=0;d<4;d++)
+    {
+      eDRX_Value_4Bit[d] = eDRX_Value_8Bit[d + 1];
+    }
 
-    send_at_command("AT+CEDRXS=1,5,\"0010\"\r\n", "OK", 1000); // Set Cycle Length
-    send_at_command("AT+CEDRX=2,1,3,2\r\n", "OK", 1000); // Read PTW (Pageingtimewindow Values
+    eDRX_Value_4Bit_Command_String = String(eDRX_Value_4Bit);
+
+    display_debug_output("----------------\r\n");
+    display_debug_output("eDRX_Value:");
+    display_debug_output(String(eDRX_Value));
+
+    display_debug_output("----------------\r\n");
+    display_debug_output("eDRX_Value_8Bit_String:");
+    display_debug_output(String(eDRX_Value_8Bit));
+
+    display_debug_output("----------------\r\n");
+    display_debug_output("eDRX_Value_4Bit_String:");
+    display_debug_output(eDRX_Value_4Bit_Command_String);
+    display_debug_output("----------------\r\n");
+
+    ////iota()
+
+    ////send_at_command("AT+CEDRXS=1,5,\"0010\"\r\n", "OK", 1000); // Set Cycle Length
+    ////send_at_command("AT+CEDRX=2,1,3,2\r\n", "OK", 1000); // Read PTW (Pageingtimewindow Values
 }
 
 void general_information()
@@ -372,10 +381,7 @@ void modem_init()
 {
   device.Init(&Serial2, 16, 17);
   //connect_modem();
-
   calc_TAU_Activetime_eDRX();
   psm_settings();
   edrx_settings();
-
-
 }

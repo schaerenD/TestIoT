@@ -125,4 +125,33 @@ void ampereGetInterrupt()
     
     ;;; ;;; ;;;
 
-    
+    display_debug_output("----------------\r\n");
+    display_debug_output("T3324_Value_16Bit:");
+    display_debug_output(T3324_Value_16Bit);
+
+    display_debug_output("----------------\r\n");
+    display_debug_output("T3324_Value_8Bit:");
+    display_debug_output(T3324_Value_8Bit);
+
+    display_debug_output("----------------\r\n");
+    display_debug_output("T3324_Value_8Bit_String:");
+    display_debug_output(T3324_Value_8Bit_String);
+
+    display_debug_output("----------------\r\n");
+    display_debug_output("T3412_Value_8Bit:");
+    display_debug_output(T3412_Value_8Bit);
+
+    display_debug_output("----------------\r\n");
+    display_debug_output("T3412_Value_8Bit:");
+    display_debug_output(T3412_Value_8Bit);
+
+    display_debug_output("----------------\r\n");
+    display_debug_output("T3412_Value_8Bit_String:");
+    display_debug_output(T3412_Value_8Bit_String);
+
+    display_debug_output("----------------\r\n");
+    display_debug_output("LAST:");
+    display_debug_output(TestStringTxxxx);
+
+        //send_at_command("AT+CPSMS=1,,,\"01011111\",\"00000001\"\r\n", "OK", 1000); // Set PSM Values
+    //send_at_command("AT+CPSMS?\r\n", "OK", 1000); // Read PSM Values
