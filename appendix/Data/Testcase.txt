@@ -1,0 +1,27 @@
+Bla
+
+Einleitung
+
+Das IoT Testkit dient zum dauerhaften überprüfen der Low Power Netzwerkfunktionalitäten LTE Cat M1 und NB-IoT.
+Bei der Swisscom wird mit Stand dieser Doku die LTE Cat M1 funktionalität über die gleichen EPGs bedient wie alle anderen normalen Mobilekunden. Um insbesondere die Power Saving und eDRX Funktionen die LTE Cat M1 mit sich bringt testen zu können, wurde dieses Testkit entworfen. 
+
+Die Idee dahinter. Ein einfaches IoT Device sendet in gewissen Abständen Werte an einen Server. Dieser überprüft ob die Timeoutzeiten eingehalten wurde. Ausserdem werden weitere Werte wie die IP Adresse des IoT Kits auf übereinstimmung überprüft
+
+Inbetriebnahme
+
+Folgenede Punkte sind zur Inbetriebnahme zu überprüfen:
+
+SIM Karte einsetzen
+
+FOTOs
+
+Das Modem vom System entfernen indem die UART Kabel und die Antenne entfernt wird. Anschliessnd müssen auf der Rückseite die 3 Schrauben geöffnet werden. Die Simkarte im Slot eingestetzt und anschliessend das Modem wieder in das System ingriert werden.
+
+Speissung
+
+Das System läuft an einem USB 3.0 Port (900mA/5V) an einem Compueter Problemlos. Da der M5 Stack einen Akku integriert hat läuft das System auch ohne externe Speissung einen Momentlang weiter bzw. kann dieser denn Verbrauch gut zwischenpuffern. Für denn Standalonebetrieb sollte ein Standart Netzteil mit 1A ausreichen. M5 selber empfehlen jedoch mind. 2A. 
+
+Parameter beschrieb
+
+E-Mail versand
+

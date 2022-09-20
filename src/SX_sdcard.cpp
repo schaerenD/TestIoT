@@ -19,7 +19,7 @@ void sdcard_init()
     }
     else
     {
-        display_debug_output("ERROR NO FILE");// ToDo: File not found
+        display_debug_output("ERROR NO FILE WITH NAME CONFIGURATION.txt");
     }
 
     // Init SD Card

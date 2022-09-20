@@ -1,4 +1,4 @@
-Parameter_1_eDRX=1
+Parameter_1_eDRX_Cycle=1
 Parameter_2_PageingWindow=1
 Parameter_3_TAU_T3412_Unit=2
 Parameter_4_TAU_T3412_Value=7
