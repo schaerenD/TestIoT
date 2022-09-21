@@ -24,6 +24,8 @@ uint32_t eDRX_Time_int = 0;
 String eDRX_Time_String = "";
 String eDRX_Time_Command_String = "";
 
+int sendtime = 1;
+
 M5_SIM7080G device;
 
 // eDRX Values

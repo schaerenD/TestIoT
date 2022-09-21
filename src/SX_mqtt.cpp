@@ -96,3 +96,8 @@ void test4_Post_SM(String topic)
   readstr = device.waitMsg(5000);
   log(readstr);
 }
+
+void mqtt_init()
+{
+  init_mqqt("thingsboard.cloud","1883");
+}

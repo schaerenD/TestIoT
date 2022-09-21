@@ -41,6 +41,16 @@ void sdcard_init()
     int eigthParameterEnd = Test.indexOf('\r',eigthParameterBegin);
     int ninethParameterBegin = Test.indexOf('=',eigthParameterEnd);
     int ninethParameterEnd = Test.indexOf('\r',ninethParameterBegin);
+    int tenthParameterBegin = Test.indexOf('=',ninethParameterEnd);
+    int tenthParameterEnd = Test.indexOf('\r',tenthParameterBegin);
+    int eleventhParameterBegin = Test.indexOf('=',tenthParameterEnd);
+    int eleventhParameterEnd = Test.indexOf('\r',eleventhParameterBegin);
+    int twelvthParameterBegin = Test.indexOf('=',ninethParameterEnd);
+    int twelvthParameterEnd = Test.indexOf('\r',tenthParameterBegin);
+    int thirteenthParameterBegin = Test.indexOf('=',ninethParameterEnd);
+    int thirteenthParameterEnd = Test.indexOf('\r',tenthParameterBegin);
+    int fourteenthParameterBegin = Test.indexOf('=',ninethParameterEnd);
+    int fourteenthParameterEnd = Test.indexOf('\r',tenthParameterBegin);
 
     String firstParameter = Test.substring(firstParameterBegin+1, firstParameterEnd);
     String secondParameter = Test.substring(secondParameterBegin+1, secondParameterEnd);
@@ -51,6 +61,7 @@ void sdcard_init()
     String seventhParameter = Test.substring(seventhParameterBegin+1, seventhParameterEnd);
     String eigthParameter = Test.substring(eigthParameterBegin+1, eigthParameterEnd);
     String ninethParameter = Test.substring(ninethParameterBegin+1, ninethParameterEnd);
+    String tenthParameter = Test.substring(tenthParameterBegin+1, tenthParameterEnd);
 
     extern int eDRX_Value;
     eDRX_Value = firstParameter.toInt();
@@ -66,4 +77,6 @@ void sdcard_init()
     Activetime_T3324_Value = sixthParameter.toInt();
     extern String apn_name;
     apn_name = seventhParameter;
+    extern int sendtime;
+    sendtime = tenthParameter.toInt();
 }
