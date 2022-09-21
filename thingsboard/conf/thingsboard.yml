@@ -1,0 +1,7 @@
+# Main Data
+export MQTT_BIND_PORT=8080
+address: "${MQQT_BIND_ADDRESS:thingsboard.cloud}"
+ssl: SSL_ENABLED false
+certtificat: SSL_PEM_CERT	server.pem
+mainnode: INACTIVITY_EVENT
+# Mailrouler

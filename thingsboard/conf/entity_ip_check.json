@@ -1,0 +1,26 @@
+{
+    "attributes": ["ip-adress", "serial"]
+}
+{
+    "tenantId": {
+       ...
+    },
+    "type": "IP Adress Changed",
+    "originator": {
+       ...
+    },
+    "severity": "CRITICAL",
+    "status": "CLEARED_UNACK",
+    "startTs": 1526985698000,
+    "endTs": 1526985698000,
+    "ackTs": 0,
+    "clearTs": 1526985712000,
+    "details": {
+      "temperature": 70,
+      "ts": 1526985696000
+    },
+    "propagate": true,
+    "id": "33cd8999-5dac-11e8-bbab-ad47060c9431",
+    "createdTime": 1526985698000,
+    "name": "High Temperature Alarm"
+}
