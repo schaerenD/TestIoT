@@ -47,3 +47,6 @@ Mail senden???????
 
 -> TAU Und andere ATable iun die Doku von Powwer Point miot fdewr £Erklätung
 -> Achtung CLRF ist wichtig beim speichern
+
+
+-> Send Timer hinzufügen
