@@ -18,9 +18,9 @@ void setup()
   Wire.begin(); // Wire/I2C is used for Current and Temperature, Pressure and Humandity.
 
   // Swisscom Init Functions
-  ticker_init(); // Timer Ticker Interrupts
   display_init(); // Init Display Functinality
   sdcard_init();
+  ticker_init(); // Timer Ticker Interrupts
   energy_init(); // Energy Init
   sensor_init();
   modem_init();

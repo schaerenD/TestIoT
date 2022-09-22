@@ -108,9 +108,9 @@ void sdcard_init()
     CHECKBUTTON:
     M5.update();
     if(M5.BtnA.wasPressed())
-    { }
+    {delay(50);delay(50); }
     else
-    { delay(50);goto CHECKBUTTON;}
+    {delay(50);delay(50);delay(50);delay(50);goto CHECKBUTTON;}
     display_debug_output("\n\r");
     display_debug_output("\n\r");
     display_debug_output("\n\r");

@@ -167,12 +167,7 @@ void mqtt_init()
       display_debug_output("\r\n");
       display_debug_output("\r\n");
       display_debug_output("MODEM DEEP SLEEP");
-      delay(500);
-      display_debug_output(".");
-      delay(500);
-      display_debug_output(".");
-      delay(500);
-      display_debug_output(".");
+      display_debug_output(String(connection_timeout));
     }
     else if (connection_timeout < 3500) // after -> 3500s Wake Up for next Connection
     {
@@ -193,7 +188,8 @@ void mqtt_init()
       display_debug_output("\r\n");
       display_debug_output("\r\n");
       display_debug_output("\r\n");
-      display_debug_output("STILL SLEEP");
+      display_debug_output("MODEM RUN ");
+      display_debug_output(String(connection_timeout));
     }
     delay(1000);    
   }
