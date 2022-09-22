@@ -94,7 +94,7 @@ void send_at_command(const String atcommand, const String answer, int waittime)
     }
     else if(readstr.indexOf(answer) == -1) 
     {
-      display_debug_output("ERROR\r\n");
+      display_debug_output("ERROR MODEM\r\n");
       error_counter++;    // Send Again
       continue;
     }
@@ -115,9 +115,9 @@ void connect_modem()
   send_at_command("AT+CMEE=2\r\n", "OK", 1000);// Enable verbos Error Code 
   send_at_command("AT+CGATT=0\r\n", "OK", 3000);// Deatach from Network
   send_at_command("AT+CPIN?\r\n", "OK", 3000);// Check if SIM PIN is required
-  send_at_command("AT+CGDCONT=1,\"IP\",\"gprs.swisscom.ch\"\r\n", "OK", 1000);// Set PDP Context with APN, IP and DHCP
+  send_at_command("AT+CGDCONT=1,\"IP\",\"shared.m2m.ch\"\r\n", "OK", 1000);// Set PDP Context with APN, IP and DHCP
   send_at_command("AT+CEREG=1\r\n", "OK", 1000);// ???
-  send_at_command("AT+CNCFG=0,1,\"gprs.swisscom.ch\"\r\n", "OK", 1000);// Activate Context
+  send_at_command("AT+CNCFG=0,1,\"shared.m2m.ch\"\r\n", "OK", 1000);// Activate Context
   send_at_command("AT+CGATT=1\r\n", "OK", 1000);
 }
 
@@ -334,18 +334,18 @@ void edrx_settings()
 
     eDRX_Value_4Bit_Command_String = String(eDRX_Value_4Bit);
 
-    display_debug_output("----------------\r\n");
-    display_debug_output("eDRX_Value:");
-    display_debug_output(String(eDRX_Value));
-
-    display_debug_output("----------------\r\n");
-    display_debug_output("eDRX_Value_8Bit_String:");
-    display_debug_output(String(eDRX_Value_8Bit));
-
-    display_debug_output("----------------\r\n");
-    display_debug_output("eDRX_Value_4Bit_String:");
-    display_debug_output(eDRX_Value_4Bit_Command_String);
-    display_debug_output("----------------\r\n");
+    //display_debug_output("----------------\r\n");
+    //display_debug_output("eDRX_Value:");
+    //display_debug_output(String(eDRX_Value));
+//
+    //display_debug_output("----------------\r\n");
+    //display_debug_output("eDRX_Value_8Bit_String:");
+    //display_debug_output(String(eDRX_Value_8Bit));
+//
+    //display_debug_output("----------------\r\n");
+    //display_debug_output("eDRX_Value_4Bit_String:");
+    //display_debug_output(eDRX_Value_4Bit_Command_String);
+    //display_debug_output("----------------\r\n");
 
     ////iota()
 
@@ -379,11 +379,52 @@ void test1_calculation_for_Opertional()
   calc_TAU_Activetime_eDRX();
 }
 
+void modem_boot_loop()
+{
+  display_debug_output("\r\n");
+  display_debug_output("\r\n");
+  display_debug_output("\r\n");
+  display_debug_output("\r\n");
+  display_debug_output("\r\n");
+  display_debug_output("MODEM CONNECTED");
+  delay(500);
+  display_debug_output(".");
+  delay(500);
+  display_debug_output(".");
+  delay(500);
+  display_debug_output(".");
+  delay(500);
+  display_debug_output(".");  
+  delay(500);
+  display_debug_output(".");  
+  delay(500);
+  display_debug_output(".");
+  delay(2500);
+  display_debug_output("\r\n");
+  display_debug_output("\r\n");
+  display_debug_output("\r\n");
+  display_debug_output("\r\n");
+  display_debug_output("\r\n");  
+  display_debug_output("\r\n");
+  display_debug_output("\r\n");
+  display_debug_output("\r\n");
+  display_debug_output("\r\n");
+  display_debug_output("\r\n");
+  display_debug_output("\r\n");  
+  display_debug_output("\r\n");
+  display_debug_output("\r\n");
+  display_debug_output("\r\n");
+  display_debug_output("\r\n");
+  display_debug_output("\r\n");
+}
+
 void modem_init()
 {
   device.Init(&Serial2, 16, 17);
-  //connect_modem();
-  calc_TAU_Activetime_eDRX();
-  psm_settings();
-  edrx_settings();
+  connect_modem();
+  modem_boot_loop();
+  //calc_TAU_Activetime_eDRX();
+  //psm_settings();
+  //edrx_settings();
+  // power_on(); // After Setting the Parameter the Modem should go to Sleep Mode
 }

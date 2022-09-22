@@ -1,2 +1,3 @@
 
-void sdcard_init(void);
+void sensor_init(void);
+void test3_takeMeteo_SM(void);

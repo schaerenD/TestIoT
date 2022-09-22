@@ -8,8 +8,12 @@
 const String MQTT_Broker_URL = "thingsboard.cloud";
 const String MQTT_Broker_Port = "1883";
 const int MQTT_Broker_Keeptime = 60;
-const int CLIENTID = 60;
 const String MQTT_Subtopic = "sub_topic";
+
+String PASSWORD;
+String CLIENTID;
+String USERNAME;
+String URL;
 
 
 void init_mqqt(const String URL, const String Port)

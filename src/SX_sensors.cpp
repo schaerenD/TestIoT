@@ -25,7 +25,7 @@ void test3_takeMeteo_SM()
   }
 }
 
-void sensor()
+void sensor_init()
 {
   qmp6988.init();
 }

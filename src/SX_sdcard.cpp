@@ -45,12 +45,12 @@ void sdcard_init()
     int tenthParameterEnd = Test.indexOf('\r',tenthParameterBegin);
     int eleventhParameterBegin = Test.indexOf('=',tenthParameterEnd);
     int eleventhParameterEnd = Test.indexOf('\r',eleventhParameterBegin);
-    int twelvthParameterBegin = Test.indexOf('=',ninethParameterEnd);
-    int twelvthParameterEnd = Test.indexOf('\r',tenthParameterBegin);
-    int thirteenthParameterBegin = Test.indexOf('=',ninethParameterEnd);
-    int thirteenthParameterEnd = Test.indexOf('\r',tenthParameterBegin);
-    int fourteenthParameterBegin = Test.indexOf('=',ninethParameterEnd);
-    int fourteenthParameterEnd = Test.indexOf('\r',tenthParameterBegin);
+    int twelvthParameterBegin = Test.indexOf('=',eleventhParameterEnd);
+    int twelvthParameterEnd = Test.indexOf('\r',twelvthParameterBegin);
+    int thirteenthParameterBegin = Test.indexOf('=',twelvthParameterEnd);
+    int thirteenthParameterEnd = Test.indexOf('\r',thirteenthParameterBegin);
+    int fourteenthParameterBegin = Test.indexOf('=',thirteenthParameterEnd);
+    int fourteenthParameterEnd = Test.indexOf('\r',fourteenthParameterBegin);
 
     String firstParameter = Test.substring(firstParameterBegin+1, firstParameterEnd);
     String secondParameter = Test.substring(secondParameterBegin+1, secondParameterEnd);
@@ -62,6 +62,10 @@ void sdcard_init()
     String eigthParameter = Test.substring(eigthParameterBegin+1, eigthParameterEnd);
     String ninethParameter = Test.substring(ninethParameterBegin+1, ninethParameterEnd);
     String tenthParameter = Test.substring(tenthParameterBegin+1, tenthParameterEnd);
+    String eleventhParameter = Test.substring(eleventhParameterBegin+1, eleventhParameterEnd);
+    String twelvthParameter = Test.substring(twelvthParameterEnd+1, twelvthParameterEnd);
+    String thirteenthParameter = Test.substring(thirteenthParameterBegin+1, thirteenthParameterEnd);
+    String fourteenthParameter = Test.substring(fourteenthParameterBegin+1, fourteenthParameterEnd);
 
     extern int eDRX_Value;
     eDRX_Value = firstParameter.toInt();
@@ -79,4 +83,35 @@ void sdcard_init()
     apn_name = seventhParameter;
     extern int sendtime;
     sendtime = tenthParameter.toInt();
+    extern String URL;
+    URL = eleventhParameter;
+    extern String USERNAME;
+    USERNAME = twelvthParameter;
+    extern String CLIENTID;
+    CLIENTID = thirteenthParameter;
+    extern String PASSWORD;
+    PASSWORD = fourteenthParameter;
+
+
+    // Check Parameter Site One
+    display_debug_output("CHECK PARAMETERS:\n\r");
+    display_debug_output("eDRX Cycle: " + firstParameter);
+    display_debug_output("\n\rPTW:  " + secondParameter);
+    display_debug_output("\n\rT3412_Base:  " + thirdParameter);
+    display_debug_output("\n\rT3412_Value:  " + fourthParameter);
+    display_debug_output("\n\rT3324_Base:  " + fifthParameter); 
+    display_debug_output("\n\rT3324_Value:  " + sixthParameter);
+    display_debug_output("\n\rAPN:  " + seventhParameter);
+    display_debug_output("\n\rURL:  " + eleventhParameter);
+    display_debug_output("\n\rUSERNAME:  " + twelvthParameter);
+    display_debug_output("\n\r\n\r\n\r\n\rPRESS LEFT BUTTON");
+    CHECKBUTTON:
+    M5.update();
+    if(M5.BtnA.wasPressed())
+    { }
+    else
+    { goto CHECKBUTTON;}
+    display_debug_output("\n\r\n\r\n\r\n\r\n\r\n\r\n\r");
+    display_debug_output("\n\r\n\r\n\r\n\r\n\r\n\r\n\r");
+    display_debug_output("\n\r\n\r\n\r\n\r\n\r\n\r\n\r");
 }

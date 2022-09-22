@@ -6,6 +6,7 @@
 #include "SX_modem.h"
 #include "SX_display.h"
 #include "SX_energy.h"
+#include "SX_sdcard.h"
 #include "SX_sensors.h"
 #include "SX_system.h"
 
@@ -23,6 +24,7 @@ void setup()
   energy_init(); // Energy Init
   modem_init();
   mqtt_init();
+  sensor_init();
 
   // Read Parameter
 
@@ -33,5 +35,7 @@ void setup()
 void loop() 
 {
   energy_statemachine();
+  test3_takeMeteo_SM();
+
   delay(1000);
 }
