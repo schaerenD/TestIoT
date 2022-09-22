@@ -2,6 +2,7 @@
 #include <M5Stack.h>
 #include "SX_mqtt.h"
 #include "SX_modem.h"
+#include "SX_energy.h"
 #include "SX_display.h"
 #include "M5_SIM7080G.h"
 
@@ -81,6 +82,11 @@ void test4_Post_SM(String topic)
   String JSON_Header = "{\"temperature\": ";
   String JSON_Second_Part = ",\r\n \"humidity\": ";
   String JSON_Third_Part = ",\r\n \"pressure\": ";
+  String JSON_4_Part = ",\r\n \"TAU\": ";
+  String JSON_5_Part = ",\r\n \"eDRX\": ";
+  String JSON_6_Part = ",\r\n \"PTW\": ";
+  String JSON_7_Part = ",\r\n \"IP\": ";
+  String JSON_8_Part = ",\r\n \"Current:\": ";
   String JSON_End = "}";
   String JSON1;
   extern float tmp;
@@ -101,8 +107,17 @@ void test4_Post_SM(String topic)
   oldSeconds = seconds;
 
   // String JOSN
-  JSON1 = JSON_Header + tmp + JSON_Second_Part + hum + JSON_Third_Part + pressure + JSON_End;
-  int JSON_length = JSON1.length();
+
+  extern int eDRX_Value;
+  extern int Pageinig_Window;
+  extern int TAU_T3412_Unit;
+  extern int TAU_T3412_Value;
+  extern int Activetime_T3324_Unit;
+  extern int Activetime_T3324_Value;
+  extern float newActuelAverage;
+
+  JSON1 = JSON_Header + tmp + JSON_Second_Part + hum + JSON_Third_Part + pressure + JSON_5_Part + eDRX_Value + JSON_6_Part + Pageinig_Window + JSON_7_Part + "10.0.131.226" + JSON_8_Part + newActuelAverage + JSON_End;
+  uint16_t JSON_length = JSON1.length();
 
   String JSON_length_String = "";
   JSON_length_String.concat(JSON_length);
@@ -189,6 +204,7 @@ void mqtt_init()
       display_debug_output("\r\n");
       display_debug_output("\r\n");
       display_debug_output("MODEM RUN ");
+      energy_statemachine();
       display_debug_output(String(connection_timeout));
     }
     delay(1000);    

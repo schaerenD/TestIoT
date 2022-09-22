@@ -8,6 +8,7 @@ ADS1115 Ammeter(AMETER, AMETER_ADDR, AMETER_EEPROM_ADDR);
 float adcValue;
 const int adcValueRingbufferLength = 500;
 float adcValueRingbuffer[adcValueRingbufferLength];
+float newActuelAverage = 0.0;
 
 void energy_test_output()
 {
@@ -58,7 +59,6 @@ Energy Average Calculation
 void energy_current_average()
 {
   noInterrupts();
-  float newActuelAverage = 0.0;
   int numberOfValues = 0;
   for (int d = 0;d < adcValueRingbufferLength; d++)
   {
@@ -94,5 +94,7 @@ Takes Current for Powertaker
 void energy_statemachine()
 {
   // Copy Ringbuffer
-  energy_current_average();
+  //energy_current_average();
+  newActuelAverage = 2.2;
+
 }

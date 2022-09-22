@@ -9,7 +9,7 @@ Parameter_8_RAT=7
 Parameter_9_Mode=0
 Parameter_10_Sendtime=30
 Parameter_11_URL=thingsboard.cloud
-Parameter_12_USERNAME=h3LGa97iU0kz5ufuKlCQ
-Parameter_13_CLIENTID=1fcba86c-e310-4cb3-862d-8a6ed676f5c6
+Parameter_12_USERNAME=h3LGa97iU0kz5ufuKlC2
+Parameter_13_CLIENTID=1fcba86c-e310-4cb3-862d-8a6ed676f5c2
 Parameter_14_PASSWORD=1234
 END
