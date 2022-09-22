@@ -22,9 +22,10 @@ void setup()
   display_init(); // Init Display Functinality
   sdcard_init();
   energy_init(); // Energy Init
+  sensor_init();
   modem_init();
   mqtt_init();
-  sensor_init();
+
 
   // Read Parameter
 
@@ -36,6 +37,7 @@ void loop()
 {
   energy_statemachine();
   test3_takeMeteo_SM();
+  //mqtt_send();
 
   delay(1000);
 }

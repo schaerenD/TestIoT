@@ -17,8 +17,7 @@ String URL;
 
 
 void init_mqqt(const String URL, const String Port)
-{
-  log("--------------------\r\n");
+{  
   send_at_command("AT+CNACT=0,1\r\n", "OK", 1000);     //  AT+CNACT=<pdpidx>,<action>  <pdpidx>=0: Context 0-3, <action>=0: Deactive, 1:Active, 2: Auto Active
   send_at_command("AT+CNACT?\r\n", "OK", 1000);
   String Conf = "AT+SMCONF=\"URL\",\"" + URL + "\",\"" + Port + "\"\r\n";
@@ -34,8 +33,26 @@ void init_mqqt(const String URL, const String Port)
   //send_at_command("AT+SMCONF=\"ASYNCMODE\",\"1\"\r\n", "OK", 1000);
   //send_at_command("AT+SMCONF=\"SUBHEX\",\"1\"\r\n", "OK", 1000);
   send_at_command("AT+SMCONF?\r\n", "OK", 1000);
-  send_at_command("AT+SMCONN\r\n", "OK", 5000);
-  send_at_command("AT+SMSTATE?\r\n", "OK", 1000);
+  //send_at_command("AT+SMCONN\r\n", "OK", 5000);
+  //send_at_command("AT+SMSTATE?\r\n", "OK", 1000);
+  //extern uint16_t connection_timeout;
+  //connection_timeout = 40;
+  //display_debug_output("\r\n");
+  //display_debug_output("\r\n");
+  //display_debug_output("\r\n");
+  //display_debug_output("CONNECT SERVER");
+  //delay(500);
+  //display_debug_output(".");
+  //delay(500);
+  //display_debug_output(".");
+  //delay(500);
+  //display_debug_output(".");
+  //delay(500);
+  //display_debug_output(".");  
+  //delay(500);
+  //display_debug_output(".");  
+  //delay(500);
+  //display_debug_output(".");
 }
 
 void post_mqqt(const String topic)
@@ -90,7 +107,26 @@ void test4_Post_SM(String topic)
   String JSON_length_String = "";
   JSON_length_String.concat(JSON_length);
 
+  send_at_command("AT+SMCONN\r\n", "OK", 5000);
   send_at_command("AT+SMSTATE?\r\n", "OK", 1000);
+  extern uint16_t connection_timeout;
+  connection_timeout = 3600;
+  display_debug_output("\r\n");
+  display_debug_output("\r\n");
+  display_debug_output("\r\n");
+  display_debug_output("CONNECT SERVER");
+  delay(500);
+  display_debug_output(".");
+  delay(500);
+  display_debug_output(".");
+  delay(500);
+  display_debug_output(".");
+  delay(500);
+  display_debug_output(".");  
+  delay(500);
+  display_debug_output(".");  
+  delay(500);
+  display_debug_output(".");
   
   //device.sendMsg("AT+SMPUB=\"v1/devices/me/telemetry\",5,1,1\r\n");
   String Conf = "AT+SMPUB=\"" + topic + "\"," + JSON_length_String + ",0,0\r\n";
@@ -99,9 +135,66 @@ void test4_Post_SM(String topic)
   device.sendMsg(JSON1);
   readstr = device.waitMsg(5000);
   log(readstr);
+  send_at_command("AT+SMDISC\r\n", "OK", 1000);
+  display_debug_output("\r\n");
+  display_debug_output("\r\n");
+  display_debug_output("\r\n");
+  display_debug_output("SEND DATA");
+  delay(500);
+  display_debug_output(".");
+  delay(500);
+  display_debug_output(".");
+  delay(500);
+  display_debug_output(".");
+}
+
+void mqtt_send()
+{
+
 }
 
 void mqtt_init()
 {
   init_mqqt("thingsboard.cloud","1883");
+  delay(1000);
+  test4_Post_SM("v1/devices/me/telemetry");
+  while(1)
+  {
+    extern uint16_t connection_timeout;
+    if(connection_timeout < 3520) // after 40s -> Deep Sleep
+    {
+      display_debug_output("\r\n");
+      display_debug_output("\r\n");
+      display_debug_output("\r\n");
+      display_debug_output("MODEM DEEP SLEEP");
+      delay(500);
+      display_debug_output(".");
+      delay(500);
+      display_debug_output(".");
+      delay(500);
+      display_debug_output(".");
+    }
+    else if (connection_timeout < 3500) // after -> 3500s Wake Up for next Connection
+    {
+      display_debug_output("\r\n");
+      display_debug_output("\r\n");
+      display_debug_output("\r\n");
+      display_debug_output("MODEM WAKE UP");
+      delay(500);
+      display_debug_output(".");
+      delay(500);
+      display_debug_output(".");
+      delay(500);
+      display_debug_output(".");
+      test4_Post_SM("v1/devices/me/telemetry");
+    }
+    else // SHOW Some Information
+    {
+      display_debug_output("\r\n");
+      display_debug_output("\r\n");
+      display_debug_output("\r\n");
+      display_debug_output("STILL SLEEP");
+    }
+    delay(1000);    
+  }
 }

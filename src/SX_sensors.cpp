@@ -2,6 +2,7 @@
 #include <M5Stack.h>
 #include "M5_ENV.h"
 #include "SX_sensors.h"
+#include "SX_display.h"
 
 float tmp      = 0.0;
 float hum      = 0.0;
@@ -28,5 +29,6 @@ void test3_takeMeteo_SM()
 void sensor_init()
 {
   qmp6988.init();
+  test3_takeMeteo_SM(); 
 }
   

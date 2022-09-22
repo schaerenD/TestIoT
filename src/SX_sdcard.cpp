@@ -110,8 +110,8 @@ void sdcard_init()
     if(M5.BtnA.wasPressed())
     { }
     else
-    { goto CHECKBUTTON;}
-    display_debug_output("\n\r\n\r\n\r\n\r\n\r\n\r\n\r");
-    display_debug_output("\n\r\n\r\n\r\n\r\n\r\n\r\n\r");
-    display_debug_output("\n\r\n\r\n\r\n\r\n\r\n\r\n\r");
+    { delay(50);goto CHECKBUTTON;}
+    display_debug_output("\n\r");
+    display_debug_output("\n\r");
+    display_debug_output("\n\r");
 }
